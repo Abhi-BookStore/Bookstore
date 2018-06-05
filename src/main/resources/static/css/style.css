@@ -1,0 +1,46 @@
+body {
+	
+}
+
+hr {
+	border: 0px;
+	height: 1px;
+	color: #333;
+	background-color: #333;
+}
+
+.container {
+	width: 90%;
+}
+
+.navbar {
+	margin-bottom: 20px;
+}
+
+.home-headline {
+	font-family: 'Times New Roman', Times, serif;
+	font-size: 20px;
+	color: #fff;
+	margin: auto;
+	text-align: center;
+	margin-top: -13px;
+}
+
+.home-headline span {
+	background-color: #231f20;
+	padding: 5px 20px;
+}
+
+.section-headline {
+	font-family: 'Times New Roman', Times, serif;
+	font-size: 20px;
+	color: #fff;
+	margin: auto;
+	text-align: center;
+	margin-top: 55px;
+}
+
+.section-headline span {
+	background-color: #231f20;
+	padding: 15px 20px;
+}

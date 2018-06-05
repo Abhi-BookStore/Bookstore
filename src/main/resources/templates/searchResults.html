@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1000/xhtml">
+<head th:replace="common/header :: common-header" />
+<body>
+	<div th:replace="common/header :: navbar" />
+
+	<div class="container">
+
+		<div class="row" style="margin-bottom: -70px;">
+			<div class="col-xs-8">
+				<h2 class="section-headline">
+					<h2 class="section-headline">
+						<span>Search Results</span>
+					</h2>
+				</h2>
+			</div>
+			<div class="col-xs-4">
+				<img alt="logo" src="/image/logo.png" class="img-responsive" />
+			</div>
+		</div>
+		<hr
+			style="position: absolute; width: 85%; height: 6px; background-color: #333; z-index: -1; margin-top: -75px;" />
+
+	<div class="row">
+		<div class="col-xs-12">
+			<h2 th:text="${keyword}"></h2>
+			<h3 th:text="${#lists.size(bookList)}"></h3>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-12">
+			<table>
+				<tr th:each="book : ${bookList}">
+					<td th:text="${book.title}"></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+
+
+
+	</div>
+
+	<!-- Placed at the end of the document so the pages load faster -->
+	<div th:replace="common/header :: body-bottom-scripts" />
+
+
+</body>
+</html>
