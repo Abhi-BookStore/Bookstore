@@ -41,7 +41,7 @@ public class Book {
 	@Transient
 	private MultipartFile bookImage;
 	
-	@OneToMany
+	@OneToMany(mappedBy="book")
 	@JsonIgnore
 	private List<BookToCartItem> bookToCartItemList;
 

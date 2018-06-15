@@ -6,8 +6,11 @@ import java.util.concurrent.CompletableFuture;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -16,10 +19,14 @@ import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.bookstore.domain.Order;
 import com.bookstore.domain.User;
 import com.bookstore.domain.UserPayment;
 import com.bookstore.domain.UserShipping;
+import com.bookstore.s3.service.S3Services;
 
 @Component
 public class MailConstructor {
@@ -29,6 +36,19 @@ public class MailConstructor {
 	
 	@Autowired
 	private TemplateEngine templateEngine;
+	
+	@Autowired
+	private S3Services s3Services;
+
+	@Value("${jsa.s3.uploadfile}")
+	private String uploadFilePath;
+
+	@Autowired
+	private AmazonS3 s3client;
+	
+	@Value("${jsa.s3.bucket}")
+	private String bucketName;
+
 
 	public SimpleMailMessage constructSimpleResetTokenEmail(String contextPath, Locale locale, String token, User user,
 			String password) {
@@ -119,6 +139,11 @@ public class MailConstructor {
 	@Async
 	public CompletableFuture<MimeMessagePreparator> constructSimpleOrderPlacedEmail(Order order, User user, Locale locale) {
 		
+		
+		// AWS logic has been written here, refactor the code
+		S3Object s3object = s3client.getObject(bucketName, order.getId()+".pdf");
+		S3ObjectInputStream inputStream = s3object.getObjectContent();
+		
 		Context context = new Context();
 		context.setVariable("order", order);
 		context.setVariable("user", user);
@@ -129,11 +154,12 @@ public class MailConstructor {
 			
 			@Override
 			public void prepare(MimeMessage mimeMessage) throws Exception {
-				MimeMessageHelper email = new MimeMessageHelper(mimeMessage);
+				MimeMessageHelper email = new MimeMessageHelper(mimeMessage, true);
 				email.setTo(user.getEmail());
 				email.setFrom(new InternetAddress("abhibookstore123@gmail.com"));
 				email.setSubject("Order Confirmation - "+ order.getId());
-				email.setText(text, true);				
+				email.setText(text, true);
+				email.addAttachment("Order_Summary_"+order.getId()+".pdf", new ByteArrayResource(IOUtils.toByteArray(inputStream)));
 			}
 		};
 		
