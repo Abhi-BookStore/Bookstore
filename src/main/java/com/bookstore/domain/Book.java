@@ -1,12 +1,16 @@
 package com.bookstore.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
@@ -34,14 +38,19 @@ public class Book {
 	private double ourPrice;
 	private boolean active = true;
 
+	@OneToMany(/*mappedBy = "book", */fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JsonIgnore
+	@JoinColumn(name="book_id")
+	private List<Review> reviewList;
+
 	@Column(columnDefinition = "text")
 	private String description;
 	private int inStockNumber;
 
 	@Transient
 	private MultipartFile bookImage;
-	
-	@OneToMany(mappedBy="book")
+
+	@OneToMany(mappedBy = "book")
 	@JsonIgnore
 	private List<BookToCartItem> bookToCartItemList;
 
@@ -188,7 +197,26 @@ public class Book {
 	public void setBookToCartItemList(List<BookToCartItem> bookToCartItemList) {
 		this.bookToCartItemList = bookToCartItemList;
 	}
-	
-	
+
+	public List<Review> getReviewList() {
+		return reviewList;
+	}
+
+	public void setReviewList(List<Review> reviewList) {
+		this.reviewList = reviewList;
+	}
+
+	/**
+	 * Utility method to add review to the List
+	 * 
+	 * @param review
+	 */
+	public void addReview(Review review) {
+		if (null == reviewList) {
+			reviewList = new ArrayList<>();
+		}
+		reviewList.add(review);
+//		review.setBook(this);
+	}
 
 }

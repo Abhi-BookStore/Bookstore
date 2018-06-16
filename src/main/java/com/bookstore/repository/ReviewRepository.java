@@ -3,9 +3,10 @@ package com.bookstore.repository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.bookstore.domain.UserReview;
+import com.bookstore.domain.Review;
 
 @Repository
-public interface UserReviewRepository extends CrudRepository<UserReview, Long>{
+public interface ReviewRepository extends CrudRepository<Review, Long> {
 
+	
 }

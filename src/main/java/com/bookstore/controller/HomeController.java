@@ -1,7 +1,6 @@
 package com.bookstore.controller;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -31,13 +30,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.bookstore.domain.Book;
-import com.bookstore.domain.CartItem;
 import com.bookstore.domain.Order;
+import com.bookstore.domain.Review;
 import com.bookstore.domain.User;
 import com.bookstore.domain.UserShipping;
 import com.bookstore.domain.security.PasswordResetToken;
 import com.bookstore.domain.security.Role;
 import com.bookstore.domain.security.UserRole;
+import com.bookstore.repository.ReviewRepository;
 import com.bookstore.service.BookService;
 import com.bookstore.service.CartItemService;
 import com.bookstore.service.OrderService;
@@ -48,34 +48,36 @@ import com.bookstore.utility.IndiaConstants;
 import com.bookstore.utility.MailConstructor;
 import com.bookstore.utility.SecurityUtility;
 
-
 @Controller
 public class HomeController {
 	private static final Logger LOG = LoggerFactory.getLogger(HomeController.class);
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private BookService bookService;
-	
+
 	@Autowired
 	private UserSecurityService userSecurityService;
-	
+
 	@Autowired
 	private JavaMailSender mailSender;
 
 	@Autowired
 	private MailConstructor mailContructor;
-	
+
 	@Autowired
 	private OrderService orderService;
-	
+
 	@Autowired
 	private CartItemService cartItemService;
-	
+
 	@Autowired
 	private UserShippingService userShippingService;
+	
+	@Autowired
+	private ReviewRepository reviewRepository;
 
 	@RequestMapping("/")
 	public String indexPage() {
@@ -90,7 +92,6 @@ public class HomeController {
 	@RequestMapping("/login")
 	public String login(Model model) {
 		model.addAttribute("classActiveLogin", true);
-		LOG.info("::::::::::::: Inside login method ::::::::::::::::");
 		return "myAccount";
 	}
 
@@ -236,104 +237,101 @@ public class HomeController {
 		return "myAccount";
 	}
 
-	@RequestMapping(value="/updateUserInfo", method=RequestMethod.POST)
-	public String updateUserInfo(Model model,
-			@ModelAttribute("user") User user,
-			@ModelAttribute("newPasssword") String newPasssword
-			) throws Exception {
-		
+	@RequestMapping(value = "/updateUserInfo", method = RequestMethod.POST)
+	public String updateUserInfo(Model model, @ModelAttribute("user") User user,
+			@ModelAttribute("newPasssword") String newPasssword) throws Exception {
+
 		User currentUser = userService.findById(user.getId());
-		
-		if(null == currentUser) {
+
+		if (null == currentUser) {
 			model.addAttribute("classActiveEdit", true);
 			throw new Exception("User not found.");
-			
+
 		}
-		
-		/*check if email already exist*/
-		
-		if(userService.findByEmail(user.getEmail()) != null) {
-			if(userService.findByEmail(user.getEmail()).getId() != currentUser.getId()) {
+
+		/* check if email already exist */
+
+		if (userService.findByEmail(user.getEmail()) != null) {
+			if (userService.findByEmail(user.getEmail()).getId() != currentUser.getId()) {
 				model.addAttribute("emailExists", true);
 				model.addAttribute("classActiveEdit", true);
 				return "myProfile";
 			}
 		}
-		
-		/*check if username already exist*/
-		
-		if(userService.findByUsername(user.getUsername()) != null) {
-			if(userService.findByUsername(user.getUsername()).getId() != currentUser.getId()) {
+
+		/* check if username already exist */
+
+		if (userService.findByUsername(user.getUsername()) != null) {
+			if (userService.findByUsername(user.getUsername()).getId() != currentUser.getId()) {
 				model.addAttribute("userExists", true);
 				model.addAttribute("classActiveEdit", true);
 				return "myProfile";
 			}
 		}
-		
+
 		// Update Password
-		
-		if(null != newPasssword && !newPasssword.isEmpty() && !newPasssword.equals("")) {
+
+		if (null != newPasssword && !newPasssword.isEmpty() && !newPasssword.equals("")) {
 			BCryptPasswordEncoder passwordEncoder = SecurityUtility.passwordEncoder();
 			String dbPasword = currentUser.getPassword();
-			
-			LOG.info("============checking if password matches-======= "+ passwordEncoder.matches(user.getPassword(), dbPasword));
-			
-			if(passwordEncoder.matches(user.getPassword(), dbPasword)) {
+
+			LOG.info("============checking if password matches-======= "
+					+ passwordEncoder.matches(user.getPassword(), dbPasword));
+
+			if (passwordEncoder.matches(user.getPassword(), dbPasword)) {
 				currentUser.setPassword(passwordEncoder.encode(newPasssword));
-			}else {
+			} else {
 				model.addAttribute("passwordNotMatched", true);
 				model.addAttribute("classActiveEdit", true);
 				return "myProfile";
 			}
 		}
-		
-		LOG.info("========First Name: "+ user.getFirstName());
-		LOG.info("========Last Name: "+ user.getLastName());
-		LOG.info("========UserName: "+ user.getUsername());
-		LOG.info("========Email: "+ user.getEmail());
-		
+
+		LOG.info("========First Name: " + user.getFirstName());
+		LOG.info("========Last Name: " + user.getLastName());
+		LOG.info("========UserName: " + user.getUsername());
+		LOG.info("========Email: " + user.getEmail());
+
 		currentUser.setFirstName(user.getFirstName());
 		currentUser.setLastName(user.getLastName());
 		currentUser.setUsername(user.getUsername());
 		currentUser.setEmail(user.getEmail());
-		
+
 		userService.save(currentUser);
-		
+
 		model.addAttribute("EditUser", true);
 		model.addAttribute("updateUserInfo", true);
 		model.addAttribute("user", currentUser);
 		model.addAttribute("classActiveEdit", true);
-		
-		/*Set current Session for new user.*/
-		
+
+		/* Set current Session for new user. */
+
 		UserDetails userDetails = userSecurityService.loadUserByUsername(currentUser.getUsername());
-		
+
 		Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
 				userDetails.getAuthorities());
-		
+
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-		
+
 		return "myProfile";
 
 	}
-	
+
 	@RequestMapping("/bookShelf")
 	public String bookShelf(Model model) {
-			
+
 		List<Book> bookList = bookService.findAll();
-		
+
 		model.addAttribute("bookList", bookList);
-		
+
 		return "bookShelf";
 	}
-	
+
 	@RequestMapping("/bookDetail")
-	private String bookDetail(
-			Model model, 
-			@PathParam("id") Long id, 
-			Principal principal) {
+	private String bookDetail(Model model, @PathParam("id") Long id, Principal principal) {
 
 		Book book = bookService.findOne(id);
+		double averageRating = 0;
 
 		if (book == null) {
 			model.addAttribute("message", "Unable to fetch details right now.");
@@ -345,110 +343,148 @@ public class HomeController {
 			User user = userService.findByUsername(username);
 			model.addAttribute("user", user);
 		}
+		
+		List<Review> reviewList = book.getReviewList();
+		if(reviewList.size() !=0) {
+			averageRating = getAverageRatingForTheBook(reviewList);
+			model.addAttribute("addedReview", true);
+		}
 
 		List<Integer> qtyList = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 		model.addAttribute("qtyList", qtyList);
 		model.addAttribute("qty", 1);
+		model.addAttribute("reviewList", reviewList);
+		model.addAttribute("averageRating",  averageRating);
 
 		return "bookDetail";
 	}
-	
+
+	private double getAverageRatingForTheBook(List<Review> reviewList) {
+		
+		double rating = 0;
+		int reviewListSize = reviewList.size();
+		
+		if(reviewListSize==0) {
+			return 0L;
+		}
+		
+		for(Review review : reviewList) {
+			rating += review.getRatingStars();
+		}
+		
+		return (double) (rating/reviewListSize);
+	}
+
 	@RequestMapping("/myProfile")
 	private String myProfile(Model model, Principal principal) {
-		
+
 		User user = userService.findByUsername(principal.getName());
-		
+
 		model.addAttribute("user", user);
 		model.addAttribute("userPaymentList", user.getUserPaymentList());
 		model.addAttribute("userShippingList", user.getUserShippingList());
 		model.addAttribute("orderList", user.getOrderList());
-		
+
 		UserShipping userShipping = new UserShipping();
 		model.addAttribute("userShipping", userShipping);
-		
+
 		model.addAttribute("listOfCreditCards", true);
 		model.addAttribute("listOfShippingAddresses", true);
-		
+
 		List<String> stateList = IndiaConstants.listOfIndiaStateCodes;
 		Collections.sort(stateList);
 		model.addAttribute("stateList", stateList);
 		model.addAttribute("classActiveEdit", true);
-		
+
 		return "myProfile";
 	}
-	
+
 	@RequestMapping("/orderDetails")
-	public String orderDetails(
-			Model model,
-			@RequestParam("id") Long orderId,
-			Principal principal
-			) throws Exception {
-		
+	public String orderDetails(Model model, @RequestParam("id") Long orderId, Principal principal) throws Exception {
+
 		User user = userService.findByUsername(principal.getName());
-		
+
 		Order order = orderService.findOne(orderId);
-		
-		LOG.info("******************** ORDER *******************" + order.getId() + ", "+ order.getOrderTotal());
-		
-		/*Check added for validating the order summary for current user only*/
-		if(order.getUser().getId() != user.getId()) {
+
+		LOG.info("******************** ORDER *******************" + order.getId() + ", " + order.getOrderTotal());
+
+		/* Check added for validating the order summary for current user only */
+		if (order.getUser().getId() != user.getId()) {
 			return "badRequestPage";
-		}else {
-			
-			/*just avoiding a DB call here by fetching cartItems from user*/
-//			List<CartItem> cartItemList = cartItemService.findByOrder(order);
-			
+		} else {
+
+			/* just avoiding a DB call here by fetching cartItems from user */
+			// List<CartItem> cartItemList = cartItemService.findByOrder(order);
+
 			model.addAttribute("order", order);
 			model.addAttribute("cartItemList", order.getCartItemList());
-//			model.addAttribute("cartItemList", cartItemList);
-			
+			// model.addAttribute("cartItemList", cartItemList);
+
 			model.addAttribute("user", user);
 			model.addAttribute("addNewShippingAddress", true);
 			model.addAttribute("orderList", user.getOrderList());
-			
+
 			UserShipping userShipping = new UserShipping();
 			model.addAttribute("userShipping", userShipping);
-					
+
 			List<String> stateList = IndiaConstants.listOfIndiaStateCodes;
 			Collections.sort(stateList);
 			model.addAttribute("stateList", stateList);
-			
+
 			model.addAttribute("listOfShippingAddresses", true);
 			model.addAttribute("classActiveOrders", true);
 			model.addAttribute("listOfCreditCards", true);
 			model.addAttribute("displayOrderDetails", true);
 
-
 			model.addAttribute("userPaymentList", user.getUserPaymentList());
 			model.addAttribute("userShippingList", user.getUserShippingList());
-			
-			return "myProfile";			
+
+			return "myProfile";
 		}
 	}
-	
+
 	@RequestMapping("/searchByCategory")
-	public String searchByCategory(
-			Model model,
-			@RequestParam("category") String category
-			) {
-		
+	public String searchByCategory(Model model, @RequestParam("category") String category) {
+
 		List<Book> bookList = bookService.findByCategory(category);
 		model.addAttribute("bookList", bookList);
-		
+
 		return "bookShelf";
 	}
-	
-	
+
 	@RequestMapping("/search")
-	public String fuzzySearch(Model model,
-			@RequestParam("keyword") String keyword
-			) {		
-		
+	public String fuzzySearch(Model model, @RequestParam("keyword") String keyword) {
+
 		List<Book> bookList = bookService.findByTitleContaining(keyword);
-		
+
 		model.addAttribute("bookList", bookList);
-		
+
 		return "searchResults";
-	}	
-	
+	}
+
+	@RequestMapping(value="/bookDetail/addReview", method=RequestMethod.POST)
+	public String addUserReview(Model model, 
+			@ModelAttribute("userReview") String userReview,
+			@ModelAttribute("bookId") Long bookId,
+			Principal principal
+			) {
+		
+		User user = userService.findByUsername(principal.getName());
+				
+		Review review = new Review();
+		review.setComment(userReview);
+		review.setRatingStars(4L);
+		review.setUser(user);
+		
+		Book book = bookService.findOne(bookId);
+		book.addReview(review);
+		bookService.save(book);
+		
+		List<Review> reviewList = book.getReviewList();
+		
+		model.addAttribute("reviewList" + reviewList);
+
+		return "redirect:/bookDetail?id="+bookId;
+	}
+
 }

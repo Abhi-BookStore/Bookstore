@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bookstore.domain.Book;
 import com.bookstore.repository.BookRepository;
@@ -42,6 +43,11 @@ public class BookServiceImpl implements BookService {
 			activeBookList.add(book);
 		}
 		return activeBookList;
+	}
+
+	@Override
+	public void save(Book book) {
+		bookRepository.save(book);
 	}
 
 }

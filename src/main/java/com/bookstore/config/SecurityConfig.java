@@ -46,7 +46,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			"/search",
 			"/searchByCategory",
 			"/users",
-			"/users/*"
+			"/users/*",
+			"/bookDetail/addReview"
 	};
 	
 	@Override

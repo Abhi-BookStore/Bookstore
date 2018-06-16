@@ -97,6 +97,14 @@
 			<version>2.6</version>
 		</dependency>
 
+		<!-- Lombok Depency is added for getters and setters/ constructors etc -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.16</version>
+			<scope>provided</scope>
+		</dependency>
+
 
 	</dependencies>
 

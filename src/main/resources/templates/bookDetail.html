@@ -11,7 +11,8 @@
 			<div class="col-xs-8">
 				<h2 class="section-headline">
 					<h2 class="section-headline">
-						<span th:text="${user}? ${#strings.toUpperCase(user.username)}: 'Details'"></span>
+						<span
+							th:text="${user}? ${#strings.toUpperCase(user.username)}: 'Details'"></span>
 					</h2>
 				</h2>
 			</div>
@@ -23,65 +24,174 @@
 			style="position: absolute; width: 85%; height: 6px; background-color: #333; z-index: -1; margin-top: -75px;" />
 		<img alt="bg" src="/image/wood.png" class="img-responsive"
 			style="margin-top: -75px;" />
-			
+
 		<form th:action="@{/shoppingCart/addItem}" method="post">
 			<input hidden="hidden" th:field="*{book.id}" />
 			<div class="row" style="margin-top: 120px;">
-	    		<div class="col-xs-3">
-	    			<a th:href="@{/bookShelf}">Back to book list</a><br/>
-	    			<img class="img-responsive shelf-book" th:src="#{adminPath}+@{/image/book/}+${book.id}+'.png'" />
-	    		</div>
-	    		
-	    		<div class="col-xs-9">
-	    			<h3 th:text="${book.title}" >Book Title</h3>
-	    			<div class="row">
-	    				<div class="col-xs-5">
-	    					<h5><strong>Author: </strong><span th:text="${book.author}"></span></h5>
-	    					<p><strong>Publisher: </strong><span th:text="${book.publisher}"></span></p>
-	    					<p><strong>Publication Date: </strong><span th:text="${book.publicationDate}"></span></p>
-	    					<p><strong>Language: </strong><span th:text="${book.language}"></span></p>
-	    					<p><strong>Category: </strong><span th:text="${book.category}"></span></p>
-	    					<p><strong><span th:text="${book.format}"></span>: </strong><span th:text="${book.numberOfPages}"></span> pages</p>
-	    					<p><strong>ISBN: </strong><span th:text="${book.isbn}"></span></p>
-	    					<p><strong>Shipping Weight: </strong><span th:text="${book.shippingWeight}"></span> ounces</p>
-    					</div>
-    					<div class="col-xs-7">
-    						<div class="panel panel-default" style="border-width: 5px; margin-top: 20px;">
-    							<div class="panel-body">
-    								<div class="row">
-    									<div class="col-xs-6">
-    										<h4>Our Price: <span style="color:#db3208;">INR&nbsp;<span th:text="${book.ourPrice}"></span></span></h4>
-    										<p>List Price: <span style="text-decoration: line-through">INR&nbsp;<span th:text="${book.listPrice}"></span></span></p>
-    										<p>You save: INR&nbsp;<span th:text="${#numbers.formatDecimal((book.listPrice - book.ourPrice), 0, 'COMMA', 2, 'POINT' )}"></span></p>
-	    									<span>Qty: </span>
-	    									<select name="qty">
-	    										<option th:each="qty : ${qtyList}" th:value="${qty}" th:text="${qty}"></option>
-	    									</select>
-    									</div>
-    									<div class="col-xs-6">
-    										<h4 th:if="*{book.inStockNumber&gt;10}" style="color: green;">In Stock</h4>  <!-- Try changing here the syntax -->
-    										<h4 th:if="*{book.inStockNumber&lt;10 and book.inStockNumber&gt;0}" style="color: orange;">Only&nbsp;<span th:text="${book.inStockNumber}"></span><span> in Stock</span></h4>
-    										<h4 th:if="*{book.inStockNumber&lt;0}" style="color: red;"> Unavailable</h4>
-    										<button type="submit" class="btn btn-warning" style="color:black;border:1px solid black; padding: 10px 40px 10px 40px;">Add to Cart</button>
-    									</div>
-    								</div>
-    							</div>
-    						</div>
-    					</div>
-	    			</div>
-    			<hr/>
-    			<p th:utext="${book.description}"></p>	    			
-	    		</div>
-	    	</div>
+				<div class="col-xs-3">
+					<a th:href="@{/bookShelf}">Back to book list</a><br /> <img
+						class="img-responsive shelf-book"
+						th:src="#{adminPath}+@{/image/book/}+${book.id}+'.png'" />
+				</div>
+
+				<div class="col-xs-9">
+					<h3 th:text="${book.title}">Book Title</h3>
+					<div class="row">
+						<div class="col-xs-5">
+							<h5>
+								<strong>Author: </strong><span th:text="${book.author}"></span>
+							</h5>
+							<p>
+								<strong>Publisher: </strong><span th:text="${book.publisher}"></span>
+							</p>
+							<p>
+								<strong>Publication Date: </strong><span
+									th:text="${book.publicationDate}"></span>
+							</p>
+							<p>
+								<strong>Language: </strong><span th:text="${book.language}"></span>
+							</p>
+							<p>
+								<strong>Category: </strong><span th:text="${book.category}"></span>
+							</p>
+							<p>
+								<strong><span th:text="${book.format}"></span>: </strong><span
+									th:text="${book.numberOfPages}"></span> pages
+							</p>
+							<p>
+								<strong>ISBN: </strong><span th:text="${book.isbn}"></span>
+							</p>
+							<p>
+								<strong>Shipping Weight: </strong><span
+									th:text="${book.shippingWeight}"></span> ounces
+							</p>
+							<p th:if="${addedReview}">
+								<strong>Average Rating: </strong><span
+									th:text="${#numbers.formatDecimal(averageRating,0,1)}"></span>/5
+								stars
+							</p>
+							<p th:if="${addedReview==null}">
+								<strong>Average Rating: </strong><span>No reviews yet</span>
+							</p>
+
+						</div>
+						<div class="col-xs-7">
+							<div class="panel panel-default"
+								style="border-width: 5px; margin-top: 20px;">
+								<div class="panel-body">
+									<div class="row">
+										<div class="col-xs-6">
+											<h4>
+												Our Price: <span style="color: #db3208;">INR&nbsp;<span
+													th:text="${book.ourPrice}"></span></span>
+											</h4>
+											<p>
+												List Price: <span style="text-decoration: line-through">INR&nbsp;<span
+													th:text="${book.listPrice}"></span></span>
+											</p>
+											<p>
+												You save: INR&nbsp;<span
+													th:text="${#numbers.formatDecimal((book.listPrice - book.ourPrice), 0, 'COMMA', 2, 'POINT' )}"></span>
+											</p>
+											<span>Qty: </span> <select name="qty">
+												<option th:each="qty : ${qtyList}" th:value="${qty}"
+													th:text="${qty}"></option>
+											</select>
+										</div>
+										<div class="col-xs-6">
+											<h4 th:if="*{book.inStockNumber&gt;10}" style="color: green;">In
+												Stock</h4>
+											<!-- Try changing here the syntax -->
+											<h4
+												th:if="*{book.inStockNumber&lt;10 and book.inStockNumber&gt;0}"
+												style="color: orange;">
+												Only&nbsp;<span th:text="${book.inStockNumber}"></span><span>
+													in Stock</span>
+											</h4>
+											<h4 th:if="*{book.inStockNumber&lt;0}" style="color: red;">
+												Unavailable</h4>
+											<button type="submit" class="btn btn-warning"
+												style="color: black; border: 1px solid black; padding: 10px 40px 10px 40px;">Add
+												to Cart</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<p th:utext="${book.description}"></p>
+				</div>
+			</div>
 		</form>
 	</div>
 
+	<br />
+	<br />
+
+
+	<div class="row" style="margin-bottom: -70px;">
+
+		<div class="col-xs-3"></div>
+
+		<div class="col-xs-9">
+			<legend class="center-block">
+				<span style="font-size: medium;">User Reviews</span>
+			</legend>
+
+			<table>
+				<thead>
+					<tr></tr>
+				</thead>
+				<tbody>
+					<tr data-th-each="review: ${reviewList}">
+						<td>
+							<div th:if="${review != null}">
+								<div class="row" style="margin-top: 5px;">
+									<div class="col-xs-12">
+										<span th:text="${review.user.username}"></span><span> :: </span> <span th:text="${review.comment}"></span>
+									</div>
+								</div>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+		</div>
+	</div>
+
+
 	<!-- /end of container -->
+	<br />
+	<br />
+	<div class="row" style="margin-bottom: -70px;">
+		<div class="col-xs-3"></div>
+		<div class="col-xs-9">
 
+			<form class="form-horizontal" th:action="@{/bookDetail/addReview}"
+				method="post" style="margin-top: 10px">
+				<input hidden="hidden" name="bookId" id="bookId"
+					th:value="*{book.id}" />
+				<fieldset>
+					<textarea class="form-control" id="userReview"
+						name="userReview" placeholder="Enter your review" ></textarea><br />
+				</fieldset>
 
-<div th:replace="common/header :: body-bottom-scripts" />
+				<!-- Buttons -->
+				<div class="form-group">
+					<div class="col-md-2"></div>
+					<div class="col-md-8">
+						<button type="submit" class="btn btn-success">Add Review</button>
+						<a class="btn btn-danger" th:href="@{/bookDetail?id=}+${book.id}">Cancel</a>
+					</div>
+				</div>
 
+			</form>
+			<br /> <br /> <br /> <br /> <br /> <br />
+		</div>
+	</div>
 
-
+	<div th:replace="common/header :: body-bottom-scripts" />
 </body>
 </html>
