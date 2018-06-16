@@ -50,4 +50,9 @@ public class BookServiceImpl implements BookService {
 		bookRepository.save(book);
 	}
 
+	@Override
+	public List<Book> findByActiveStatus() {
+		return bookRepository.findByActiveStatus();
+	}
+
 }

@@ -108,11 +108,17 @@
 												Only&nbsp;<span th:text="${book.inStockNumber}"></span><span>
 													in Stock</span>
 											</h4>
-											<h4 th:if="*{book.inStockNumber&lt;0}" style="color: red;">
-												Unavailable</h4>
-											<button type="submit" class="btn btn-warning"
+											<h4 th:if="*{book.inStockNumber&lt;1}" style="color: red;">
+												<span>Unavailable</span></h4>
+											<button th:if="*{book.inStockNumber&gt;0}" type="submit" class="btn btn-warning"
 												style="color: black; border: 1px solid black; padding: 10px 40px 10px 40px;">Add
 												to Cart</button>
+
+											<button th:if="*{book.inStockNumber&lt;1}" type="submit" disabled="disabled"
+												class="btn btn-warning"
+												style="color: black; border: 1px solid black; padding: 10px 40px 10px 40px;">Add
+												to Cart</button>
+
 										</div>
 									</div>
 								</div>

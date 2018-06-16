@@ -16,6 +16,8 @@ public interface BookService {
 	List<Book> findByCategory(String category);
 
 	void save(Book book);
+
+	List<Book> findByActiveStatus();
 }
 
 

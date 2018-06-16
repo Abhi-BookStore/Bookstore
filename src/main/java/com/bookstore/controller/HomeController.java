@@ -320,7 +320,7 @@ public class HomeController {
 	@RequestMapping("/bookShelf")
 	public String bookShelf(Model model) {
 
-		List<Book> bookList = bookService.findAll();
+		List<Book> bookList = bookService.findByActiveStatus();
 
 		model.addAttribute("bookList", bookList);
 
