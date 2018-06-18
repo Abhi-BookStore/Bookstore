@@ -1,6 +1,8 @@
 package com.bookstore.controller;
 
 import java.security.Principal;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.bookstore.domain.Book;
 import com.bookstore.domain.CartItem;
+import com.bookstore.domain.InStockNotification;
 import com.bookstore.domain.ShoppingCart;
 import com.bookstore.domain.User;
 import com.bookstore.service.BookService;
 import com.bookstore.service.CartItemService;
+import com.bookstore.service.InStockNotificationService;
 import com.bookstore.service.ShoppingCartService;
 import com.bookstore.service.UserService;
 
@@ -34,6 +38,9 @@ public class ShoppingCartController {
 	
 	@Autowired
 	private BookService bookService;
+	
+	@Autowired
+	private InStockNotificationService inStockNotificationService;
 
 	@RequestMapping("/cart")
 	private String cart(Model model, Principal principal) {
@@ -112,7 +119,7 @@ public class ShoppingCartController {
 		User user = userService.findByUsername(principal.getName());
 
 		book = bookService.findOne(book.getId());
-
+	
 		if (Integer.parseInt(qty) > book.getInStockNumber()) {
 			model.addAttribute("notEnoughStock", true);
 			return "forward:/bookDetail?id=" + book.getId();
@@ -131,4 +138,49 @@ public class ShoppingCartController {
 		
 		return "shoppingCart";
 	}
+	
+	@RequestMapping("/notifyInStock")
+	private String notifyInStock(Model model, 
+					@ModelAttribute("bookId") Long bookId,
+					@ModelAttribute("notifyMeEmail") String notifyMeEmail
+					) {
+		
+		if(null == notifyMeEmail || notifyMeEmail.equalsIgnoreCase("")) {
+			model.addAttribute("errorMessage", true);
+			return "redirect:/bookDetails?id=1"+bookId;
+		}
+		
+		Book book = bookService.findOne(bookId);
+		// Check if the subscription is already applied ?
+		// Create object of InStockNotification class
+		// Set all the attributes and save it.
+		
+		InStockNotification inStockNotification = new InStockNotification();
+		
+		InStockNotification isInStockNotification = inStockNotificationService.findByEmail(notifyMeEmail);
+		
+		if(null != isInStockNotification && isInStockNotification.isNotified()==false) {
+			model.addAttribute("alreadySubscribed", true);
+			model.addAttribute("email", notifyMeEmail);
+			model.addAttribute("book", book);
+			
+			return  "notificationSubscribed";
+		}
+		
+		inStockNotification.setBookId(bookId);
+		inStockNotification.setEmail(notifyMeEmail);
+		inStockNotification.setNotified(false);
+
+		inStockNotification.setSubscriptionTime(new Date());
+		
+		inStockNotificationService.save(inStockNotification);
+		
+		model.addAttribute("alreadySubscribed", false);
+		model.addAttribute("email", notifyMeEmail);
+		model.addAttribute("book", book);
+		
+		return "notificationSubscribed";
+	}
+	
+	
 }

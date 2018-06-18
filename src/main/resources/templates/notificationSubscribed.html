@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1000/xhtml">
+<head th:replace="common/header :: common-header" />
+<body>
+	<div th:replace="common/header :: navbar" />
+
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12">
+			<h3 th:if="${alreadySubscribed} == true">
+				You have already subscribed for the book <a th:href="@{/bookDetail?id=}+${book.id}"><span th:text="${book.title}"></span></a>.
+				<br/><br/>We will notify you on your email id <span style="color: green; background-color: aqua;" th:text="${email}"></span> once the items is back in the stock.
+			</h3>
+			<h3 th:if="${alreadySubscribed} == false">
+				Thank you for subscribing for the book <a th:href="@{/bookDetail?id=}+${book.id}"><span th:text="${book.title}"></span></a>. 
+				<br/><br/>We will notify you on your email id <span style="color: green; background-color: aqua;" th:text="${email}"></span> once the items is back in the stock.
+			</h3>
+		</div>
+	</div>
+</div>
+
+
+	<!-- Placed at the end of the document so the pages load faster -->
+	<div th:replace="common/header :: body-bottom-scripts" />
+
+
+</body>
+</html>

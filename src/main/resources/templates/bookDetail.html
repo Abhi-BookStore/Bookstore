@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1000/xhtml">
 <head th:replace="common/header :: common-header" />
@@ -24,6 +23,25 @@
 			style="position: absolute; width: 85%; height: 6px; background-color: #333; z-index: -1; margin-top: -75px;" />
 		<img alt="bg" src="/image/wood.png" class="img-responsive"
 			style="margin-top: -75px;" />
+			
+			
+		<!-- In Stock Notification -->
+		<div th:if="${book.inStockNumber&lt;1}" class="row" style="margin-top: 20px;">
+			<form th:action="@{/shoppingCart/notifyInStock}" method="post">
+				<input hidden="hidden" name="bookId" id="bookId" th:value="*{book.id}" />
+				<div class="col-xs-9">
+					<!-- Notify me added here -->
+					<input class="form-control" type="email" name="notifyMeEmail"
+						style="margin: 10px;" placeholder="Enter your email" />
+				</div>
+				<div class="col-xs-3">
+					<button class="btn" type="submit" name="subscribe"
+						 style="margin: 10px;" >Notify Me</button>
+				</div>
+			</form>
+		</div>
+
+			
 
 		<form th:action="@{/shoppingCart/addItem}" method="post">
 			<input hidden="hidden" th:field="*{book.id}" />
@@ -96,7 +114,7 @@
 											<span>Qty: </span> <select name="qty">
 												<option th:each="qty : ${qtyList}" th:value="${qty}"
 													th:text="${qty}"></option>
-											</select>
+											</select>											
 										</div>
 										<div class="col-xs-6">
 											<h4 th:if="*{book.inStockNumber&gt;10}" style="color: green;">In
@@ -118,10 +136,10 @@
 												class="btn btn-warning"
 												style="color: black; border: 1px solid black; padding: 10px 40px 10px 40px;">Add
 												to Cart</button>
-
 										</div>
 									</div>
 								</div>
+
 							</div>
 						</div>
 					</div>
@@ -130,6 +148,9 @@
 				</div>
 			</div>
 		</form>
+
+
+
 	</div>
 
 	<br />
