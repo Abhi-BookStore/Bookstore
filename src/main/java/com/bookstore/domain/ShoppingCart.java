@@ -1,5 +1,6 @@
 package com.bookstore.domain;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -15,7 +16,7 @@ import javax.persistence.OneToOne;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class ShoppingCart {
+public class ShoppingCart implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)

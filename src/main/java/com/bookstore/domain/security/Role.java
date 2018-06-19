@@ -1,5 +1,6 @@
 package com.bookstore.domain.security;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Role {
+public class Role implements Serializable {
 
 	@Id
 	private int roleId;

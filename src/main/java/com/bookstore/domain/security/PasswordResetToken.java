@@ -1,5 +1,6 @@
 package com.bookstore.domain.security;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -14,7 +15,7 @@ import javax.persistence.OneToOne;
 import com.bookstore.domain.User;
 
 @Entity
-public class PasswordResetToken {
+public class PasswordResetToken implements Serializable {
 
 	private static final int EXPIRATION = 60 * 24;
 

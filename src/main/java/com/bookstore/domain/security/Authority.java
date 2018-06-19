@@ -1,8 +1,10 @@
 package com.bookstore.domain.security;
 
+import java.io.Serializable;
+
 import org.springframework.security.core.GrantedAuthority;
 
-public class Authority implements GrantedAuthority {
+public class Authority implements GrantedAuthority  {
 	
 	private final String authority;
 	

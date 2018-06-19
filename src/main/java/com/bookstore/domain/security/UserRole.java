@@ -1,5 +1,7 @@
 package com.bookstore.domain.security;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -13,7 +15,7 @@ import com.bookstore.domain.User;
 
 @Entity
 @Table(name = "user_role")
-public class UserRole {
+public class UserRole implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

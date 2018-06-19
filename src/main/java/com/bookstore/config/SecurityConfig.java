@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -62,6 +63,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.authenticated();
 		
 		http
+			.sessionManagement()
+			.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+			.maximumSessions(1)
+			.expiredUrl("/?expired");
+		
+		http
 			.csrf().disable().cors().disable()
 			.formLogin().failureUrl("/login?error")
 			.defaultSuccessUrl("/")
@@ -75,7 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.permitAll()
 		.and()
 			.rememberMe();
-		
+				
 		
 		// @formatter:on
 
@@ -86,5 +93,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		auth.userDetailsService(userSecurityService).passwordEncoder(passwordEncoder());
 	}
+	
+	
 
 }
