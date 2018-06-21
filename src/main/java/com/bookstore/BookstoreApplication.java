@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 import com.bookstore.domain.User;
@@ -19,7 +20,7 @@ import com.bookstore.utility.SecurityUtility;
 
 @SpringBootApplication
 @EnableAsync
-public class BookstoreApplication implements CommandLineRunner {
+public class BookstoreApplication extends SpringBootServletInitializer implements CommandLineRunner {
 
 	@Autowired
 	private UserService userService;
