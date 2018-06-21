@@ -83,6 +83,12 @@ public class HomeController {
 	public String indexPage() {
 		return "index";
 	}
+	
+	@RequestMapping("/profile")
+	public String getProfileInfo(){
+		
+		return "profile";
+	}
 
 	@RequestMapping("/myAccount")
 	public String myAccount() {

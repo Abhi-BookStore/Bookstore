@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1"/>
+<title>App Profile</title></head>
+<body>
+
+<script>
+	window.fbAsyncInit = function() {
+		FB.init({
+			appId : '181585512516273',
+			cookie : true,
+			xfbml : true,
+			version : 'v3.0'
+		});
+
+		/*   FB.AppEvents.logPageView();    */
+
+		FB.getLoginStatus(function(response) {
+			statusChangeCallback(response);
+		});
+
+	};
+
+	(function(d, s, id) {
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) {
+			return;
+		}
+		js = d.createElement(s);
+		js.id = id;
+		js.src = "https://connect.facebook.net/en_US/sdk.js";
+		fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));
+
+	function checkLoginState() {
+		FB.getLoginStatus(function(response) {
+			statusChangeCallback(response);
+		});
+	}
+	
+	function statusChangeCallback(response){
+		
+		if(response.status == 'connected'){
+			document.getElementById('loginBtnId').style.display='none';
+			console.log('Authorized and logged in.');
+			TestAPI();
+		}else{
+			console.log('Couldnot log in');
+		}
+	}
+	
+	
+	function TestAPI() {
+		FB.api("me?fields=name,email,birthday", function(response){
+			
+			if(response ){
+				console.log(response);				
+			}
+		});
+	}
+	
+	
+</script>
+
+<fb:login-button 
+	id="loginBtnId"
+  scope="public_profile,email"
+  onlogin="checkLoginState();">
+</fb:login-button>
+
+<button id="logout-btn" onClick="logOut()">
+
+</button>
+
+
+</body>
+</html>
