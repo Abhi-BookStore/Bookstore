@@ -20,7 +20,7 @@ import com.bookstore.utility.SecurityUtility;
 
 @SpringBootApplication
 @EnableAsync
-public class BookstoreApplication extends SpringBootServletInitializer implements CommandLineRunner {
+public class BookstoreApplication implements CommandLineRunner {
 
 	@Autowired
 	private UserService userService;
