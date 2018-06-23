@@ -6,8 +6,8 @@ public interface UserShippingService {
 
 	UserShipping findById(Long shippingId);
 
-	void delete(Long shippingId);
-
 	UserShipping findByUserId(Long id);
+
+	void removeById(Long shippingId);
 
 }

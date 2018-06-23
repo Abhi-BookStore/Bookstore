@@ -16,12 +16,12 @@ public class UserShippingServiceImpl implements UserShippingService {
 	@Override
 	public UserShipping findById(Long shippingId) {
 		
-		return userShippingRepository.findById(shippingId);
+		return userShippingRepository.findById(shippingId).get();
 	}
 
 	@Override
-	public void delete(Long id) {
-		userShippingRepository.delete(id);
+	public void removeById(Long id) {
+		userShippingRepository.removeById(id);
 		
 	}
 

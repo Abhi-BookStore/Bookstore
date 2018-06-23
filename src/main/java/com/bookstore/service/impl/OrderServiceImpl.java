@@ -70,8 +70,8 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public Order findOne(Long id) {
-		return orderRepository.findOne(id);
+	public Order findById(Long id) {
+		return orderRepository.findById(id).get();
 	}
 
 }

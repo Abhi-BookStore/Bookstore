@@ -8,7 +8,7 @@ public interface ShoppingCartService {
 
 	ShoppingCart updateShoppingCart(ShoppingCart shoppingCart);
 
-	ShoppingCart findOne(Long id);
+	ShoppingCart findById(Long id);
 
 	void clearShoppingCart(ShoppingCart shoppingCart);
 	

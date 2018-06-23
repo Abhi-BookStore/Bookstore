@@ -51,9 +51,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 	}
 
 	@Override
-	public ShoppingCart findOne(Long id) {
+	public ShoppingCart findById(Long id) {
 		
-		return shoppingCartRepository.findOne(id);
+		return shoppingCartRepository.findById(id).get();
 	}
 
 	@Override

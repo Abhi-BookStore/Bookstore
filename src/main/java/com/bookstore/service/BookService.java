@@ -18,6 +18,8 @@ public interface BookService {
 	void save(Book book);
 
 	List<Book> findByActiveStatus();
+
+	Book findById(Long id);
 }
 
 

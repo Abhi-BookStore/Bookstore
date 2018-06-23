@@ -336,7 +336,7 @@ public class HomeController {
 	@RequestMapping("/bookDetail")
 	private String bookDetail(Model model, @PathParam("id") Long id, Principal principal) {
 
-		Book book = bookService.findOne(id);
+		Book book = bookService.findById(id);
 		double averageRating = 0;
 
 		if (book == null) {
@@ -410,7 +410,7 @@ public class HomeController {
 
 		User user = userService.findByUsername(principal.getName());
 
-		Order order = orderService.findOne(orderId);
+		Order order = orderService.findById(orderId);
 
 		LOG.info("******************** ORDER *******************" + order.getId() + ", " + order.getOrderTotal());
 
@@ -482,7 +482,7 @@ public class HomeController {
 		review.setRatingStars(4L);
 		review.setUser(user);
 		
-		Book book = bookService.findOne(bookId);
+		Book book = bookService.findById(bookId);
 		book.addReview(review);
 		bookService.save(book);
 		

@@ -182,7 +182,7 @@ public class ShippingController {
 			return "badRequestPage";
 		}
 		
-		userShippingService.delete(shippingId);
+		userShippingService.removeById(shippingId);
 
 		model.addAttribute("user", user);
 		model.addAttribute("listOfCreditCards", true);

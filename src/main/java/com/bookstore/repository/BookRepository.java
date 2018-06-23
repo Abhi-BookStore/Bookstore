@@ -1,6 +1,7 @@
 package com.bookstore.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -13,7 +14,7 @@ public interface BookRepository extends CrudRepository<Book, Long> {
 	
 	List<Book> findAll();
 
-	Book findOne(Long id);
+	Optional<Book> findById(Long id);
 
 	List<Book> findByTitleContaining(String title);
 
