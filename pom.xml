@@ -144,13 +144,6 @@
 			<artifactId>snakeyaml</artifactId>
 		</dependency>
 
-		<!-- Adding for deploying on Heroku -->
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-		</dependency>
-
-
 	</dependencies>
 
 	<build>
