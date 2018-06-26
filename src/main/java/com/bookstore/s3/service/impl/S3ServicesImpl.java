@@ -30,6 +30,8 @@ public class S3ServicesImpl implements S3Services {
 		try {
 			File file = new File(uploadFilePath);
 			s3client.putObject(bucketName, keyName, file);
+//			System.out.println(" OOOOOOOOOOOOOOOOOOOOOOOOOOOOO filelink: " + s3client.getUrl(bucketName, keyName));
+
 			logger.info("File upload done for file: " + keyName + " from location: " + uploadFilePath);
 
 		} catch (AmazonServiceException ase) {

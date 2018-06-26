@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 public class BookToCartItem {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@ManyToOne

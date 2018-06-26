@@ -11,7 +11,7 @@ import javax.persistence.OneToOne;
 public class BillingAddress {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String billingAddressName;
 	private String billingAddressStreet1;

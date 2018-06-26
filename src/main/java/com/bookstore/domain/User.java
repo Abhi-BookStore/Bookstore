@@ -14,9 +14,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bookstore.domain.security.Authority;
 import com.bookstore.domain.security.UserRole;
@@ -26,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class User implements UserDetails {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false, updatable = false)
 	private Long id;
 	private String username;
@@ -38,6 +40,9 @@ public class User implements UserDetails {
 	private String email;
 	private String phone;
 	private boolean enabled = true;
+	
+	@Transient
+	private MultipartFile profileImage;
 
 	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JsonIgnore
@@ -192,6 +197,16 @@ public class User implements UserDetails {
 	public void setOrderList(List<Order> orderList) {
 		this.orderList = orderList;
 	}
+
+	public MultipartFile getProfileImage() {
+		return profileImage;
+	}
+
+	public void setProfileImage(MultipartFile profileImage) {
+		this.profileImage = profileImage;
+	}
+	
+	
 	
 	
 }

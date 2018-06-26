@@ -74,7 +74,16 @@
 											</div>
 										</div>
 
-										<div class="form-group">
+								<div class="form-group">
+									<label for="profileImage" class="col-md-2 control-label">Upload
+										Profile image</label>
+									<div class="col-md-8">
+										<input id="profileImage" type="file" name="profileImage"
+											 th:value="${user.profileImage}" />
+									</div>
+								</div>
+
+								<div class="form-group">
 											<label for="userName">Username</label> <input type="text"
 												class="form-control" id="userName" name="username" 
 												th:value="${user.username}" />

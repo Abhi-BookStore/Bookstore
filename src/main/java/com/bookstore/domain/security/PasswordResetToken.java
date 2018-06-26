@@ -20,7 +20,7 @@ public class PasswordResetToken implements Serializable {
 	private static final int EXPIRATION = 60 * 24;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	private String token;

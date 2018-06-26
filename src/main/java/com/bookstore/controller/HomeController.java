@@ -1,5 +1,9 @@
 package com.bookstore.controller;
 
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collections;
@@ -12,6 +16,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.websocket.server.PathParam;
 
+import org.mortbay.log.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +33,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bookstore.domain.Book;
 import com.bookstore.domain.Order;
@@ -304,6 +310,23 @@ public class HomeController {
 		currentUser.setEmail(user.getEmail());
 
 		userService.save(currentUser);
+		
+		MultipartFile userImage = user.getProfileImage();
+		
+		try {
+			
+			byte[] bytes = userImage.getBytes();
+			String name = user.getUsername()+"_"+user.getId()+".png";
+			Log.info("**** profile pic name is :::::: "+ name);
+			
+			BufferedOutputStream stream = new BufferedOutputStream(
+					new FileOutputStream("src/main/resources/static/image/profile/" + name));
+			stream.write(bytes);
+			stream.close();
+
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		model.addAttribute("EditUser", true);
 		model.addAttribute("updateUserInfo", true);

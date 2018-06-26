@@ -6,7 +6,7 @@
 	<groupId>com.bookstore</groupId>
 	<artifactId>Bookstore</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>  <!-- Changed this to war from jar -->
 
 	<name>Bookstore</name>
 	<description>Book Store Ecommerce Project Frontend part</description>
@@ -23,8 +23,6 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 	</properties>
-
-
 
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-thymeleaf -->
@@ -48,16 +46,14 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.springframework/spring-core -->
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
@@ -114,12 +110,6 @@
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
 
-		<!-- Adding for deploying on Heroku -->
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-		</dependency>
-
 		<dependency>
 			<groupId> org.apache.cassandra</groupId>
 			<artifactId>cassandra-all</artifactId>
@@ -151,11 +141,11 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
+<!-- 				<configuration>
 					<mainClass>com.bookstore.BookstoreApplication</mainClass>
 					<executable>true</executable>
 				</configuration>
-
+ --><!-- 
 				<executions>
 					<execution>
 						<goals>
@@ -163,7 +153,7 @@
 						</goals>
 					</execution>
 				</executions>
-
+ -->
 			</plugin>
 
 		</plugins>

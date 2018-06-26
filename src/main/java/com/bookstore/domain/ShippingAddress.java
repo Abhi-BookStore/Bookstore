@@ -10,7 +10,7 @@ import javax.persistence.OneToOne;
 public class ShippingAddress {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String shippingAddressName;
 	private String shippingAddressStreet1;
