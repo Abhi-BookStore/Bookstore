@@ -221,7 +221,7 @@ public class OrderController {
 		pdfGenerator.generateItenerary(order, uploadFilePath + order.getId() + ".pdf");
 
 		/* Uplaod the PDFs to S3 Bucket */
-		s3Services.uploadObject(order.getId()+".pdf", uploadFilePath + order.getId()+".pdf");
+		s3Services.uploadObjectWithPublicAccess(order.getId()+".pdf", uploadFilePath + order.getId()+".pdf");
 
 		/* Sending Async email */
 		mailSenderUtilityService.sendOrderSubmittedEmail(order, user, Locale.ENGLISH);

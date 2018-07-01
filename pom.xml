@@ -5,8 +5,8 @@
 
 	<groupId>com.bookstore</groupId>
 	<artifactId>Bookstore</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>  <!-- Changed this to war from jar -->
+	<version>0.0.1-SNAPSHOT</version>  <!-- Changed this to war from jar -->
+	<packaging>war</packaging>
 
 	<name>Bookstore</name>
 	<description>Book Store Ecommerce Project Frontend part</description>
@@ -129,10 +129,16 @@
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
-		<dependency>
+<!-- 		<dependency>
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>webjars-locator-core</artifactId>
+		</dependency>
+ -->
 
 	</dependencies>
 
@@ -141,19 +147,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-<!-- 				<configuration>
-					<mainClass>com.bookstore.BookstoreApplication</mainClass>
-					<executable>true</executable>
-				</configuration>
- --><!-- 
-				<executions>
-					<execution>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-					</execution>
-				</executions>
- -->
+				<!-- <configuration> <mainClass>com.bookstore.BookstoreApplication</mainClass> 
+					<executable>true</executable> </configuration> --><!-- <executions> <execution> <goals> <goal>repackage</goal> </goals> 
+					</execution> </executions> -->
 			</plugin>
 
 		</plugins>

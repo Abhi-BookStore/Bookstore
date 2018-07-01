@@ -82,7 +82,7 @@ public class CartItemServiceImpl implements CartItemService {
 	@Override
 	public void removeCartItem(CartItem cartItem) {
 		bookToCartItemRepository.deleteByCartItem(cartItem);
-		cartItemRepository.removeById(cartItem);
+		cartItemRepository.removeById(cartItem.getId());
 	}
 
 	@Override

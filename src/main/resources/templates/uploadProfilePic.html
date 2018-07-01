@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1000/xhtml">
+<head th:replace="common/header :: common-header" />
+<body>
+	<div th:replace="common/header :: navbar" />
+
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-8"  th:class="${redirected} == 'false'">
+				<form class="form-horizontal" th:action="@{/uploadPic}" method="post"
+					enctype="multipart/form-data">
+					<fieldset>
+
+						<div class="form-group">
+							<label for="profileImage" class="col-md-2 control-label">Upload
+								Profile image</label>
+							<div class="col-md-8">
+								<input id="profileImage" type="file" name="profileImage" />
+							</div>
+						</div>
+
+						<!-- Buttons -->
+						<div class="form-group">
+							<div class="col-md-2"></div>
+							<div class="col-md-8">
+								<button type="submit" class="btn btn-success">Add Book</button>
+								<a class="btn btn-danger" th:href="@{/}">Cancel</a>
+							</div>
+						</div>
+					</fieldset>
+				</form>
+
+			</div>
+			<div class="col-xs-4" th:class="${redirected}">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<!-- <img th:src="@{/image/profile/}+${user.username}+'_'+${user.id}+'.png'"
+							class="img-responsive center-block" /> -->
+						<img th:src="${imageUrl}"
+							class="img-responsive center-block" />
+					</div>
+				</div>
+			</div>
+
+
+
+		</div>
+		</div>
+
+	<!-- Placed at the end of the document so the pages load faster -->
+	<div th:replace="common/header :: body-bottom-scripts" />
+
+
+</body>
+</html>

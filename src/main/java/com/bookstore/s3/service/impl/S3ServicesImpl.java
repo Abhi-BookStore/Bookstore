@@ -1,16 +1,23 @@
 package com.bookstore.s3.service.impl;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.services.datapipeline.model.Field;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.bookstore.s3.service.S3Services;
 
 @Service
@@ -25,12 +32,16 @@ public class S3ServicesImpl implements S3Services {
 	private String bucketName;
 
 	@Override
-	public void uploadObject(String keyName, String uploadFilePath) {
+	public void uploadObjectWithPublicAccess(String keyName, String uploadFilePath) {
 
 		try {
 			File file = new File(uploadFilePath);
-			s3client.putObject(bucketName, keyName, file);
-//			System.out.println(" OOOOOOOOOOOOOOOOOOOOOOOOOOOOO filelink: " + s3client.getUrl(bucketName, keyName));
+			// s3client.putObject(bucketName, keyName, file);
+			System.out.println("********* Uploading file to AWS with public FileName ****" + keyName);
+			System.out.println("********* Uploading file to AWS with public access Location ****" + uploadFilePath);
+			s3client.putObject(
+					new PutObjectRequest(bucketName, keyName, file).withCannedAcl(CannedAccessControlList.PublicRead));
+			System.out.println(" ************** file URL: " + s3client.getUrl(bucketName, keyName));
 
 			logger.info("File upload done for file: " + keyName + " from location: " + uploadFilePath);
 
@@ -48,4 +59,39 @@ public class S3ServicesImpl implements S3Services {
 
 	}
 
+	@Override
+	public void uploadProfileImageToS3(MultipartFile mFile, String fileName) {
+
+		logger.info("**** Uploading profile Image to AWS ****** profileIamge Name: "+ fileName);
+		try {
+			File file = convertMultiPartToFile(mFile);
+			uploadFileTos3bucket(fileName, file);
+			file.delete();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	// S3 bucket uploading method requires File as a parameter,
+	// but we have MultipartFile, so we need to add method which can make this
+	// convertion.
+	private File convertMultiPartToFile(MultipartFile file) throws IOException {
+
+		File convFile = new File(file.getOriginalFilename());
+		FileOutputStream fos = new FileOutputStream(convFile);
+		fos.write(file.getBytes());
+		fos.close();
+		return convFile;
+	}
+
+	private void uploadFileTos3bucket(String fileName, File file) {
+		
+		s3client.putObject(new PutObjectRequest(bucketName, fileName, file).withCannedAcl(CannedAccessControlList.PublicRead));
+		
+	}
+
+	@Override
+	public URL getObjectAccessibleUrl(String imageName) {
+		return s3client.getUrl(bucketName, imageName);
+	}
 }

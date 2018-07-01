@@ -91,15 +91,17 @@ public class ShoppingCartController {
 	private String removeItemFromCart(
 			@RequestParam("id") Long cartItemId
 			) {
+		System.out.println("****** CartItem id ****** "+ cartItemId);
 		CartItem cartItem = cartItemService.findById(cartItemId);
-		
+		System.out.println("****** CartItem  ****** "+ cartItem);
 		// Added back those deleted book quantity to stock
 		cartItem.getBook().setInStockNumber(cartItem.getBook().getInStockNumber() + cartItem.getQty());
+		System.out.println("****** CartItem totalQty  ****** "+ cartItem.getBook().getInStockNumber() + cartItem.getQty());
+		
 		cartItemService.removeCartItem(cartItem);
 		
 		return "forward:/shoppingCart/cart";
 	}
-	
 	
 	
 	/**
