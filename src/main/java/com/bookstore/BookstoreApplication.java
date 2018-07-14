@@ -1,6 +1,7 @@
 package com.bookstore;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableAsync;
 
+import com.bookstore.domain.Book;
 import com.bookstore.domain.User;
 import com.bookstore.domain.security.Role;
 import com.bookstore.domain.security.UserRole;
@@ -36,6 +38,18 @@ public class BookstoreApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
+		
+		List<Book> books = bookService.findAll();
+		
+		for(Book book : books) {
+			if(null == book.getBookImageUrl() || book.getBookImageUrl().isEmpty() ) {
+				book.setBookImageUrl("https://s3.ap-south-1.amazonaws.com/bookstore-book-image/BookImages/defaultbook.png");
+				bookService.save(book);
+			}
+		}
+		
+		
+		
 		 User user = new User();
 		
 		 user.setFirstName("Abhinav");

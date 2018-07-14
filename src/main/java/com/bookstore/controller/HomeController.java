@@ -508,7 +508,7 @@ public class HomeController {
 		review.setComment(userReview);
 		review.setRatingStars(4L);
 		review.setUser(user);
-		
+
 		Book book = bookService.findById(bookId);
 		book.addReview(review);
 		bookService.save(book);
@@ -525,76 +525,20 @@ public class HomeController {
 		
 		User user = userService.findByUsername(principal.getName());
 		
-		URL imageUrl = s3client.getUrl(bucketName, user.getUsername()+"_"+user.getId()+".png");
+//		URL imageUrl = s3client.getUrl(bucketName, user.getUsername()+"_"+user.getId()+".png");
+
+        String imageUrl = user.getImageUrl();
 		
-		if(null != imageUrl) {
-			System.out.println("*************** Image url :"+ imageUrl.toString());
-			model.addAttribute("imageUrl", imageUrl.toString());
-		}else {
-			System.out.println("*************** Image not yet uploaded ************");
-			model.addAttribute("imageUrl", DEFAULT_USER_IMAGE);
+		if(null == imageUrl) {
+            user.setImageUrl(DEFAULT_USER_IMAGE);
+            userService.save(user);
 		}
 
-		
 		model.addAttribute("user", user);
-		model.addAttribute("redirected", false);
+//		model.addAttribute("redirected", false);
 		
 		return "uploadProfilePic";
 	}
-
-//	@RequestMapping(value="/uploadPic", method=RequestMethod.POST)
-//	public String uploadImage(Model model, 
-//						Principal principal, 
-//						@RequestParam("profileImage") MultipartFile multipartFile[]
-//						) {
-//		
-//		User user = userService.findByUsername(principal.getName());
-////		MultipartFile userImage = user.getProfileImage();
-//		
-//		System.out.println("Fetching file as multipart data ::::"+ multipartFile );
-//		
-//		try {
-//			
-//			String name = user.getUsername()+"_"+user.getId()+".png";
-//			Log.info("**** profile pic name is :::::: "+ name);
-//			
-//            StringBuffer result=new StringBuffer();
-//            byte[] bytes=null;
-//            result.append("Uploading of File(s) ");
-//
-//            for (int i=0;i<multipartFile.length;i++) {
-//                if (!multipartFile[i].isEmpty()) {
-//                    bytes = multipartFile[i].getBytes();
-//        			BufferedOutputStream stream = new BufferedOutputStream(
-//        					new FileOutputStream("src/main/resources/static/image/profile/" + name));
-//        			stream.write(bytes);
-//        			stream.close();
-//
-//                   result.append(multipartFile[i].getOriginalFilename() + " Uploaded. ") ;
-//                   
-//                   s3Services.uploadObjectWithPublicAccess(name, profileUploadfile + user.getUsername()+"_"+user.getId()+".png");
-//                }
-//                else
-//                    result.append( multipartFile[i].getOriginalFilename() + " Failed. ");
-//
-//        }
-//            System.out.println("******************File upload result is: "+result.toString());
-//
-//		}catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//		URL imageUrl = s3client.getUrl(bucketName, user.getUsername()+"_"+user.getId()+".png");
-//		System.out.println("*************** Image url :"+ imageUrl.toString());
-//		
-//		model.addAttribute("profileImage", user.getProfileImage());
-//		model.addAttribute("redirected", true);
-//		model.addAttribute("imageUrl", imageUrl.toString());
-//		
-//		return "uploadProfilePic";
-//
-//	}
-	
 	
 	@RequestMapping(value="/uploadPic", method=RequestMethod.POST)
 	public String uploadImage(Model model, 
@@ -608,17 +552,40 @@ public class HomeController {
 		s3Services.uploadProfileImageToS3(file, fileName);
 		
 		URL imageUrl = s3Services.getObjectAccessibleUrl(user.getUsername()+"_"+user.getId()+".png");
-				
-		System.out.println("*************** Image url :"+ imageUrl.toString());
-		
-		model.addAttribute("profileImage", user.getProfileImage());
-		model.addAttribute("redirected", true);
-		model.addAttribute("imageUrl", imageUrl.toString());
-		
+
+		System.out.println("*************** Setting profile Image url :"+ imageUrl.toString());
+
+		user.setImageUrl(imageUrl.toString());
+
+//		model.addAttribute("profileImage", user.getProfileImage());
+//        System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ This Should be Null:: user.getProfileImage() :::::  " + user.getProfileImage());
+
+
+        model.addAttribute("stringImageUrl", user.getImageUrl());
+        System.out.println("^^^^^^^^^^^^^^^^^^^^^^ This Should not be null :: user.getImageUrl() :::::  " + user.getImageUrl());
+
+        model.addAttribute("redirected", true);
+//		model.addAttribute("imageUrl", imageUrl.toString());
+		model.addAttribute("user", user);
+
+		// Persisting the image URL
+        userService.save(user);
 		return "uploadProfilePic";
 
 	}
 
-	
-	
+	@RequestMapping("/delete")
+	public String deleteProfilePic(Model model, Principal principal){
+
+		if(principal == null){
+			return "redirect:/login";
+		}
+		User user = userService.findByUsername(principal.getName());
+
+		user.setImageUrl(DEFAULT_USER_IMAGE);
+		userService.save(user);
+		model.addAttribute("user", user);
+		return "uploadProfilePic";
+	}
+
 }

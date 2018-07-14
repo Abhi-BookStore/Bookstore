@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1000/xhtml">
 <head th:replace="common/header :: common-header" />
@@ -25,7 +24,7 @@
 			
 			<div class="row" style="margin-top: 60px;">
 				<div class="col-xs-3">
-				<a th:href="@{/searchByCategory?category=Management}">Click for Management category</a>
+				<a th:href="@{/searchByCategory?category=Management}">Click for Management category ::::::::</a>
 				</div>
 				<div class="col-xs-9 col-xs-offset-3">
 					<div th:if="${emptyList}">
@@ -39,7 +38,7 @@
 									<div th:if="${book != null}">
 										<div class="row" style="margin-top: 60px;">
 											<div class="col-xs-3">
-												<a th:href="@{/bookDetail?id=}+${book.id}"><img class="img-responsive shelf-book" th:src="#{adminPath}+@{/image/book/}+${book.id}+'.png'" /></a>
+												<a th:href="@{/bookDetail?id=}+${book.id}"><img class="img-responsive shelf-book" th:src="${book.bookImageUrl}" /></a>
 											</div>
 											<div class="col-xs-9">
 												<a th:href="@{/bookDetail?id=}+${book.id}"><h4 th:text="${book.title}"></h4></a>

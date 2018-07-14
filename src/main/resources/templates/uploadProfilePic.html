@@ -26,6 +26,7 @@
 							<div class="col-md-8">
 								<button type="submit" class="btn btn-success">Add Book</button>
 								<a class="btn btn-danger" th:href="@{/}">Cancel</a>
+								<a class="btn btn-danger" th:href="@{/delete}">delete</a>
 							</div>
 						</div>
 					</fieldset>
@@ -37,14 +38,11 @@
 					<div class="panel-body">
 						<!-- <img th:src="@{/image/profile/}+${user.username}+'_'+${user.id}+'.png'"
 							class="img-responsive center-block" /> -->
-						<img th:src="${imageUrl}"
+						<img th:src="${user.imageUrl}"
 							class="img-responsive center-block" />
 					</div>
 				</div>
 			</div>
-
-
-
 		</div>
 		</div>
 

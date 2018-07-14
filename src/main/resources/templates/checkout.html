@@ -406,7 +406,7 @@
 										<div class="col-xs-2">
 											<a th:href="@{/bookDetail(id=${cartItem.book.id})}"> <img
 												class="img-responsive shelf-book"
-												th:src="#{adminPath}+@{/image/book/}+${cartItem.book.id}+'.png'"
+												th:src="${cartItem.book.bookImageUrl}"
 												style="width: 70px;" />
 											</a>
 										</div>

@@ -57,11 +57,11 @@
 						<form th:action="@{/shoppingCart/updateCartItem}" method="post">
 							<hr />
 							<div class="col-xs-2">
-								<a th:href="@{bookDetail(id=${cartItem.book.id})}"> <img
+								<a th:href="@{bookDetail(id=${cartItem.book.id})}"> 
+								<img
 									style="width:70px;"
 									class="img-responsive shelf-book center-block"
-									th:src="#{adminPath}+@{/image/book/}+
-								${cartItem.book.id}+'.png'" />
+									th:src="${cartItem.book.bookImageUrl}" />
 								</a>
 							</div>
 							<div class="col-xs-6">

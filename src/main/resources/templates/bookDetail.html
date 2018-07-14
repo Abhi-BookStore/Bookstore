@@ -49,7 +49,7 @@
 				<div class="col-xs-3">
 					<a th:href="@{/bookShelf}">Back to book list</a><br /> <img
 						class="img-responsive shelf-book"
-						th:src="#{adminPath}+@{/image/book/}+${book.id}+'.png'" />
+						th:src="${book.bookImageUrl}" />
 				</div>
 
 				<div class="col-xs-9">
@@ -175,7 +175,11 @@
 						<td>
 							<div th:if="${review != null}">
 								<div class="row" style="margin-top: 5px;">
-									<div class="col-xs-12">
+									<div class="col-xs-4">
+										<img th:src="${review.user.imageUrl}"
+											 class="img-responsive center-block" alt="profilePic" width="80px" height="80px" />
+									</div>
+									<div class="col-xs-8">
 										<span th:text="${review.user.username}"></span><span> :: </span> <span th:text="${review.comment}"></span>
 									</div>
 								</div>

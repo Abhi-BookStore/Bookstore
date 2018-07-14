@@ -44,6 +44,8 @@ public class User implements UserDetails {
 	@Transient
 	private MultipartFile profileImage;
 
+	private String imageUrl;
+
 	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JsonIgnore
 	private Set<UserRole> userRoles = new HashSet<>();
@@ -130,6 +132,14 @@ public class User implements UserDetails {
 
 	public void setUserRoles(Set<UserRole> userRoles) {
 		this.userRoles = userRoles;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 
 	@Override

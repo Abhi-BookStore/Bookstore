@@ -49,6 +49,8 @@ public class Book {
 
 	@Transient
 	private MultipartFile bookImage;
+	
+	private String bookImageUrl;
 
 	@OneToMany(mappedBy = "book")
 	@JsonIgnore
@@ -76,6 +78,14 @@ public class Book {
 
 	public void setAuthor(String author) {
 		this.author = author;
+	}
+
+	public String getBookImageUrl() {
+		return bookImageUrl;
+	}
+
+	public void setBookImageUrl(String bookImageUrl) {
+		this.bookImageUrl = bookImageUrl;
 	}
 
 	public String getPublisher() {

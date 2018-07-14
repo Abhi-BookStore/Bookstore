@@ -37,8 +37,6 @@ public class MailConstructor {
 	@Autowired
 	private TemplateEngine templateEngine;
 	
-	@Autowired
-	private S3Services s3Services;
 
 	@Value("${jsa.s3.uploadfile}")
 	private String uploadFilePath;
