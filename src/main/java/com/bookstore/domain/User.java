@@ -66,6 +66,9 @@ public class User implements UserDetails {
 	@OneToMany(mappedBy="user")
 	private List<Order> orderList;
 
+	@OneToOne
+	private StorePoint storePoint;
+
 	public Long getId() {
 		return id;
 	}
@@ -84,6 +87,14 @@ public class User implements UserDetails {
 
 	public String getPassword() {
 		return password;
+	}
+
+	public StorePoint getStorePoint() {
+		return storePoint;
+	}
+
+	public void setStorePoint(StorePoint storePoint) {
+		this.storePoint = storePoint;
 	}
 
 	public void setPassword(String password) {
@@ -215,8 +226,8 @@ public class User implements UserDetails {
 	public void setProfileImage(MultipartFile profileImage) {
 		this.profileImage = profileImage;
 	}
-	
-	
-	
-	
+
+
+
+
 }

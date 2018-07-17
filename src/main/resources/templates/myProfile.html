@@ -16,9 +16,10 @@
 				</h2>
 			</div>
 			<div class="col-xs-4">
-				<img alt="profilePic"
+				<a th:href="@{/updatePic}"><img alt="profilePic"
 					th:src="${user.imageUrl}"
 					class="img-responsive" width="200px" height="200px" />
+				<a/>
 			</div>
 		</div>
 		<hr
@@ -38,6 +39,8 @@
 						href="#tab-3" data-toggle="tab"><span style="color: red;">Billings</span></a></li>
 					<li th:classAppend="${classActiveShipping}? 'active'"><a
 						href="#tab-4" data-toggle="tab"><span style="color: red;">Shipping</span></a></li>
+					<li th:classAppend="${classActiveStorePoints}? 'active'"><a
+							href="#tab-5" data-toggle="tab"><span style="color: red;">StorePoints</span></a></li>
 						
 				</ul>
 			</div>

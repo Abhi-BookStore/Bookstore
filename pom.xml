@@ -57,7 +57,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
-			<optional>true</optional>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
@@ -120,6 +120,13 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.0</version>
+		</dependency>
+
+
+		<dependency>
 			<groupId> org.apache.cassandra</groupId>
 			<artifactId>cassandra-all</artifactId>
 			<version>0.8.1</version>
@@ -136,7 +143,6 @@
 			</exclusions>
 
 		</dependency>
-
 	</dependencies>
 
 	<build>

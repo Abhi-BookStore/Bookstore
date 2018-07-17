@@ -39,17 +39,7 @@ public class BookstoreApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		
-		List<Book> books = bookService.findAll();
-		
-		for(Book book : books) {
-			if(null == book.getBookImageUrl() || book.getBookImageUrl().isEmpty() ) {
-				book.setBookImageUrl("https://s3.ap-south-1.amazonaws.com/bookstore-book-image/BookImages/defaultbook.png");
-				bookService.save(book);
-			}
-		}
-		
-		
-		
+	
 		 User user = new User();
 		
 		 user.setFirstName("Abhinav");

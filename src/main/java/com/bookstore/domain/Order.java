@@ -46,6 +46,17 @@ public class Order {
 	@ManyToOne
 	private User user;
 
+	@OneToOne
+	private StorePoint storePoint;
+
+	public StorePoint getStorePoint() {
+		return storePoint;
+	}
+
+	public void setStorePoint(StorePoint storePoint) {
+		this.storePoint = storePoint;
+	}
+
 	public Long getId() {
 		return id;
 	}

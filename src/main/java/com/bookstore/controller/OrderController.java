@@ -8,6 +8,7 @@ import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import com.bookstore.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,15 +34,6 @@ import com.bookstore.domain.User;
 import com.bookstore.domain.UserPayment;
 import com.bookstore.domain.UserShipping;
 import com.bookstore.s3.service.S3Services;
-import com.bookstore.service.BillingAddressService;
-import com.bookstore.service.CartItemService;
-import com.bookstore.service.OrderService;
-import com.bookstore.service.PaymentService;
-import com.bookstore.service.ShippingAddressService;
-import com.bookstore.service.ShoppingCartService;
-import com.bookstore.service.UserPaymentService;
-import com.bookstore.service.UserService;
-import com.bookstore.service.UserShippingService;
 import com.bookstore.utility.IndiaConstants;
 import com.bookstore.utility.MailConstructor;
 import com.bookstore.utility.MailSenderUtilityService;
@@ -87,6 +79,9 @@ public class OrderController {
 
 	@Autowired
 	private S3Services s3Services;
+
+	@Autowired
+	private StorePointService storePointService;
 
 	@Value("${jsa.s3.uploadfile}")
 	private String uploadFilePath;
@@ -217,17 +212,19 @@ public class OrderController {
 		Order order = orderService.createOrder(shoppingCart, shippingAddress, billingAddress, payment, shippingmethod,
 				user);
 
-		/* Generating PDF for the order summary */
+		storePointService.addPointsWithOrderDetails(order);
+
+		/** Generating PDF for the order summary */
 		pdfGenerator.generateItenerary(order, uploadFilePath + order.getId() + ".pdf");
 
-		/* Uplaod the PDFs to S3 Bucket */
+		/** Upload the PDFs to S3 Bucket */
 		s3Services.uploadObjectWithPublicAccess(order.getId()+".pdf", uploadFilePath + order.getId()+".pdf");
 
-		/* Sending Async email */
+		/** Sending Async email */
 		mailSenderUtilityService.sendOrderSubmittedEmail(order, user, Locale.ENGLISH);
 		logger.info("Async Email Has been sent");
 
-		// Clearing shopping cart after placing the order
+		/** Clearing shopping cart after placing the order */
 		shoppingCartService.clearShoppingCart(shoppingCart);
 
 		LocalDate today = LocalDate.now();
