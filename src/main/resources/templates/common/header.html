@@ -44,7 +44,6 @@
 								<li><a href="#">Store hours &#38; Directions</a></li>
 								<li><a href="#">FAQ</a></li>
 							</ul></li>
-							<a class="navbar-brand" th:href="@{/updatePic}">Update Pic</a>
 						<form class="navbar-form" th:action="@{/search}" method="get">
 							<div class="form-group">
 								<input type="text" name="keyword" class="form-control"
@@ -56,7 +55,21 @@
 					<ul class="nav navbar-nav navbar-right">
 						<li><a th:href="@{/shoppingCart/cart}">SHOPPING CART</a></li>
 						<li><a sec:authorize="isAnonymous()" th:href="@{/login}">MY ACCOUNT</a></li>
-						<li><a sec:authorize="isAuthenticated()" th:href="@{/myProfile}">MY ACCOUNT</a></li>
+						<!--<li><a sec:authorize="isAuthenticated()" th:href="@{/myProfile}">MY ACCOUNT-->
+
+						<li class="dropdown"><a sec:authorize="isAuthenticated()" href="#" class="dropdown-toggle"
+												data-toggle="dropdown" role="button" aria-haspopup="true"
+												aria-expanded="false">ACCOUNT<span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a th:href="@{/myProfile}">My Account</a></li>
+								<li><a href="#">Refer a Friend</a></li>
+								<li><a href="#">Coming Soon</a></li>
+							</ul></li>
+
+
+						</a></li>
+
+
 						<li><a sec:authorize="isAuthenticated()" th:href="@{/logout}">LOGOUT</a></li>
 					</ul>
 				</div>
