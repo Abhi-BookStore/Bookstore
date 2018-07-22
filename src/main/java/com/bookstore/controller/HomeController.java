@@ -83,9 +83,6 @@ public class HomeController {
 	@Autowired
 	private S3Services s3Services;
 
-	@Value("${jsa.s3.profileUploadfile}")
-	private String profileUploadfile;
-
 	@Autowired
 	private AmazonS3 s3client;
 

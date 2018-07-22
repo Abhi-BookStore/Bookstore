@@ -84,9 +84,6 @@ public class OrderController {
 	@Autowired
 	private StorePointService storePointService;
 
-	@Value("${jsa.s3.uploadfile}")
-	private String uploadFilePath;
-
 	private ShippingAddress shippingAddress = new ShippingAddress();
 	private BillingAddress billingAddress = new BillingAddress();
 	private Payment payment = new Payment();
