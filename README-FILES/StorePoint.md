@@ -22,3 +22,7 @@ Long points,
 Long Book,
 Long convertedAmount,
 Long order#
+
+## =======================
+
+Admin fetches all user's StorePoint List

@@ -27,7 +27,19 @@
 						<h4><i class="fa fa-truck" aria-hidden="true"></i>
 						The estimated delivery date is <span th:text="${estimatedDeliveryDate}"></span></h4>
 				</div>
+
+				<div>
+					<div class="col-xs-4">
+					</div>
+
+					<!--Download the Order summary PDF-->
+					<div class="col-xs-8" align="right">
+						<p>Click here to download Order Summary:
+							<a th:href="@{/downloadPdf?id=}+${order.id}">Download Here</a></p>
+					</div>
+				</div>
 				<h3>List of items</h3>
+
 				<div class="row" th:each = "cartItem : ${cartItemList}">
 					<hr/>
 					<div class="col-xs-2">

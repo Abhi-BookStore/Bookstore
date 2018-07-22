@@ -1,5 +1,6 @@
 package com.bookstore.service;
 
+import com.bookstore.domain.CartItem;
 import com.bookstore.domain.Order;
 import com.bookstore.domain.StorePoint;
 import com.bookstore.domain.User;
@@ -18,7 +19,7 @@ public interface StorePointService {
      * @return
      */
     public Map<Integer,StorePoint> fetchStorePointListByUser(User user);
-    public Long findPointByOrder(Order order);
-    public Map<User, StorePoint> fetchAllUserStorePoint();
-
+    public StorePoint findPointByOrder(Order order);
+    public Map<User, List<StorePoint>> fetchAllUserStorePoint();
+    Long getStorePointsByCartItemList(List<CartItem> cartItemList);
 }

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="common/header :: common-header" />
+<body>
+<div th:replace="common/header :: navbar" />
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-xs-4">
+            <h3>Username : <span th:text="${user.username}"/></h3>
+        </div>
+    </div>
+
+    <table width="500" border="5px">
+        <thead>
+            <th>Order#</th>
+            <th>Store Point</th>
+        </thead>
+        <tbody>
+            <tr th:each="key: ${map.keySet()}">
+                <td th:text="${key}"></td>
+                <td th:text="${map.get(key).points}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<!-- Placed at the end of the document so the pages load faster -->
+<div th:replace="common/header :: body-bottom-scripts" />
+
+
+</body>
+</html>

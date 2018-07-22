@@ -13,6 +13,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.websocket.server.PathParam;
 
+import com.bookstore.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,11 +44,6 @@ import com.bookstore.domain.security.Role;
 import com.bookstore.domain.security.UserRole;
 import com.bookstore.repository.ReviewRepository;
 import com.bookstore.s3.service.S3Services;
-import com.bookstore.service.BookService;
-import com.bookstore.service.CartItemService;
-import com.bookstore.service.OrderService;
-import com.bookstore.service.UserService;
-import com.bookstore.service.UserShippingService;
 import com.bookstore.service.impl.UserSecurityService;
 import com.bookstore.utility.IndiaConstants;
 import com.bookstore.utility.MailConstructor;
@@ -92,6 +88,9 @@ public class HomeController {
 
 	@Autowired
 	private AmazonS3 s3client;
+
+	@Autowired
+	private StorePointService storePointService;
 
 	@Value("${jsa.s3.bucket}")
 	private String bucketName;

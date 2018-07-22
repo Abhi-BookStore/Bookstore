@@ -136,8 +136,9 @@ public class MailConstructor {
 
 	@Async
 	public CompletableFuture<MimeMessagePreparator> constructSimpleOrderPlacedEmail(Order order, User user, Locale locale) {
-		
-		
+
+		/**  Fetching PDF from S3 and directly attached as an email attachment. */
+
 		// AWS logic has been written here, refactor the code
 		S3Object s3object = s3client.getObject(bucketName, order.getId()+".pdf");
 		S3ObjectInputStream inputStream = s3object.getObjectContent();

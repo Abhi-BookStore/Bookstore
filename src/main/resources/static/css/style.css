@@ -44,3 +44,11 @@ hr {
 	background-color: #231f20;
 	padding: 15px 20px;
 }
+
+.point-text {
+	font-weight:bold;
+	color: #3e8f3e;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	margin-top: 15px;
+
+}

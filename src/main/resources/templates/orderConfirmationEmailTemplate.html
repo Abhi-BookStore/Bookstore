@@ -32,6 +32,39 @@
 <h2>Order Details for purchase #<span th:text="${order.id}"></span></h2>
 <hr/>
 
+<!--Listing all the books purchased-->
+
+<h3>Below you have purchased: </h3>
+<div class="row" th:each = "list : ${order.cartItemList}">
+
+	<div class="col-xs-2">
+		<a th:href="@{http://localhost:8080/bookDetail(id=${list.book.id})}"> <img
+				class="img-responsive shelf-book"
+				th:src="${list.book.bookImageUrl}"
+				style="width: 70px;" />
+		</a>
+	</div>
+	<!--<div class="col-xs-6">-->
+		<!--<div style="margin-left: 50px;">-->
+			<!--<a th:href="@{http://localhost:8080/bookDetail?id=}+${list.book.id}">-->
+				<!--<h4	th:text="${list.book.title}"></h4></a>-->
+		<!--</div>-->
+	<!--</div>-->
+
+	<!--<div class="col-xs-2">-->
+		<!--<h5 style="color: #db3208; font-size: large;">-->
+			<!--INR&nbsp;<span th:text="${list.book.ourPrice}"-->
+						   <!--th:style="${list.book.inStockNumber}==0? 'text-decoration: line-through' : ''"></span>-->
+		<!--</h5>-->
+	<!--</div>-->
+
+	<!--<div class="col-xs-2">-->
+		<!--<h5 style="font-size: large;" th:text="${list.qty}"></h5>-->
+	<!--</div>-->
+</div>
+
+<!--Creating tables for Summary-->
+
 <table>
 	<tr>
 		<td>Billing Details</td>

@@ -52,8 +52,17 @@
  								th:text="${#numbers.formatDecimal(taxTotal, 0, 2)}"></span>
  							</div>
  						</div>
- 						
- 						<hr style="height: 2px;"/>
+						<div class="row point-text">
+							<div class="col-xs-7 text-left">
+								Point to be earned:
+							</div>
+							<div class="col-xs-5 text-right">
+								<span th:text="${toBeEarnedStorePoint}"></span>
+							</div>
+						</div>
+
+
+						<hr style="height: 2px;"/>
  						<div class="row">
  							<div class="col-xs-6 text-left">
  								<h3><strong style="color: darkred;">Order total:</strong></h3>

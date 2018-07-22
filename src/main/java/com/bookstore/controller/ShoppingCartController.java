@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
+import com.bookstore.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,11 +18,6 @@ import com.bookstore.domain.CartItem;
 import com.bookstore.domain.InStockNotification;
 import com.bookstore.domain.ShoppingCart;
 import com.bookstore.domain.User;
-import com.bookstore.service.BookService;
-import com.bookstore.service.CartItemService;
-import com.bookstore.service.InStockNotificationService;
-import com.bookstore.service.ShoppingCartService;
-import com.bookstore.service.UserService;
 
 @Controller
 @RequestMapping("/shoppingCart")
@@ -41,6 +37,9 @@ public class ShoppingCartController {
 	
 	@Autowired
 	private InStockNotificationService inStockNotificationService;
+
+	@Autowired
+    private StorePointService storePointService;
 
 	@RequestMapping("/cart")
 	private String cart(Model model, Principal principal) {
@@ -119,7 +118,6 @@ public class ShoppingCartController {
 			) {
 		
 		User user = userService.findByUsername(principal.getName());
-
 		book = bookService.findOne(book.getId());
 	
 		if (Integer.parseInt(qty) > book.getInStockNumber()) {

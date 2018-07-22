@@ -22,10 +22,11 @@ public class StorePoint {
 	private Long id;
 	private Long points;
 
-	@OneToOne
+	@ManyToOne
+    @JoinColumn(name = "user_id")
 	private User user;
 
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne
 	private Order order;
 
 	private Double convertedAmount;

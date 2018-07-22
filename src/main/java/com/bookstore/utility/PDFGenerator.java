@@ -1,9 +1,9 @@
 package com.bookstore.utility;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.math.BigDecimal;
 
+import jdk.internal.util.xml.impl.Input;
 import org.springframework.stereotype.Component;
 
 import com.bookstore.domain.CartItem;
@@ -21,29 +21,33 @@ import com.itextpdf.text.pdf.PdfWriter;
 @Component
 public class PDFGenerator {
 	
-	public void generateItenerary(Order order, String filepath) {
-		
+	public ByteArrayInputStream generateItenerary(Order order) {
+
 		Document document = new Document();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
-			PdfWriter.getInstance(document, new FileOutputStream(filepath));
-			
+
+//			PdfWriter.getInstance(document, new FileOutputStream(filepath));
+
+			PdfWriter.getInstance(document, baos);
+
 			// Opened the document and can start working on the document now.
 			document.open();
-			
+
 			Font font = FontFactory.getFont("Helvetica", Font.BOLD);
-			
+
 			PdfPTable table = createBoxInsertTable();
-			
-			for(int i=0; i<order.getCartItemList().size(); i++) {
+
+			for (int i = 0; i < order.getCartItemList().size(); i++) {
 				createBoxInsertTableRow(table, order.getCartItemList().get(i));
 			}
-			
+
 			table.setFooterRows(3);
 			table.addCell(new PdfPCell(new Paragraph()));
 			table.addCell(new PdfPCell(new Paragraph()));
 			table.addCell(new PdfPCell(new Paragraph("Subtotal", font)));
 			table.addCell(new PdfPCell(new Paragraph(order.getOrderTotal().toString())));
-			
+
 			table.addCell(new PdfPCell(new Paragraph()));
 			table.addCell(new PdfPCell(new Paragraph()));
 			table.addCell(new PdfPCell(new Paragraph("TOTAL", font)));
@@ -55,13 +59,16 @@ public class PDFGenerator {
 			table.addCell(new PdfPCell(new Paragraph("***********")));
 
 			document.add(table);
-			
+
 			document.close();
-			
-			
-		} catch (FileNotFoundException | DocumentException e) {
+		}catch (Exception e){
 			e.printStackTrace();
 		}
+			
+//		} catch (FileNotFoundException | DocumentException e) {
+//			e.printStackTrace();
+//		}
+		return new ByteArrayInputStream(baos.toByteArray());
 	}
 
 	private void createBoxInsertTableRow(PdfPTable table, CartItem cartItem) {

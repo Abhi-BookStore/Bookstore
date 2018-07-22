@@ -1,10 +1,12 @@
 package com.bookstore.s3.service.impl;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +33,11 @@ public class S3ServicesImpl implements S3Services {
 	@Value("${jsa.s3.bucket}")
 	private String bucketName;
 
+/*
 	@Override
-	public void uploadObjectWithPublicAccess(String keyName, String uploadFilePath) {
+	public String uploadObjectWithPublicAccess(String keyName, String uploadFilePath) {
 
+		String orderPdfUrl = "";
 		try {
 			File file = new File(uploadFilePath);
 			// s3client.putObject(bucketName, keyName, file);
@@ -42,7 +46,7 @@ public class S3ServicesImpl implements S3Services {
 			s3client.putObject(
 					new PutObjectRequest(bucketName, keyName, file).withCannedAcl(CannedAccessControlList.PublicRead));
 			System.out.println(" ************** file URL: " + s3client.getUrl(bucketName, keyName));
-
+			orderPdfUrl = s3client.getUrl(bucketName, keyName).toString();
 			logger.info("File upload done for file: " + keyName + " from location: " + uploadFilePath);
 
 		} catch (AmazonServiceException ase) {
@@ -56,8 +60,9 @@ public class S3ServicesImpl implements S3Services {
 			logger.info("Caught an AmazonClientException: ");
 			logger.info("Error Message: " + ace.getMessage());
 		}
-
+		return orderPdfUrl;
 	}
+*/
 
 	@Override
 	public void uploadProfileImageToS3(MultipartFile mFile, String fileName) {
@@ -74,7 +79,7 @@ public class S3ServicesImpl implements S3Services {
 
 	// S3 bucket uploading method requires File as a parameter,
 	// but we have MultipartFile, so we need to add method which can make this
-	// convertion.
+	// conversion.
 	private File convertMultiPartToFile(MultipartFile file) throws IOException {
 
 		File convFile = new File(file.getOriginalFilename());
@@ -93,5 +98,22 @@ public class S3ServicesImpl implements S3Services {
 	@Override
 	public URL getObjectAccessibleUrl(String imageName) {
 		return s3client.getUrl(bucketName, imageName);
+	}
+
+
+	/**
+	 * Uploading {@link ByteArrayInputStream} to S3
+	 *
+	 * @param fileName
+	 * @param byteArrayInputStream
+	 * @return
+	 */
+	@Override
+	public String uploadStreamObjectToS3WithPublicAccess(String fileName, ByteArrayInputStream byteArrayInputStream) {
+
+		PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileName, byteArrayInputStream, new ObjectMetadata()).withCannedAcl(CannedAccessControlList.PublicRead);
+		s3client.putObject(putObjectRequest);
+		String orderPdfUrl = s3client.getUrl(bucketName, fileName).toString();
+		return orderPdfUrl;
 	}
 }

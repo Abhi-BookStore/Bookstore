@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.bookstore.service.StorePointService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -32,14 +33,16 @@ public class BookstoreApplication implements CommandLineRunner {
 	@Autowired
 	private BookService bookService;
 
+	@Autowired
+	private StorePointService storePointService;
+
 	public static void main(String[] args) {
 		SpringApplication.run(BookstoreApplication.class, args);
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
-		
-	
+
 		 User user = new User();
 		
 		 user.setFirstName("Abhinav");

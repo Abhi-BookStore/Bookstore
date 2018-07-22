@@ -1,9 +1,6 @@
 package com.bookstore.domain;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -66,8 +63,8 @@ public class User implements UserDetails {
 	@OneToMany(mappedBy="user")
 	private List<Order> orderList;
 
-	@OneToOne
-	private StorePoint storePoint;
+	@OneToMany(mappedBy = "user")
+	private List<StorePoint> storePointList;
 
 	public Long getId() {
 		return id;
@@ -89,12 +86,12 @@ public class User implements UserDetails {
 		return password;
 	}
 
-	public StorePoint getStorePoint() {
-		return storePoint;
+	public List<StorePoint> getStorePointList() {
+		return storePointList;
 	}
 
-	public void setStorePoint(StorePoint storePoint) {
-		this.storePoint = storePoint;
+	public void setStorePointList(List<StorePoint> storePointList) {
+		this.storePointList = storePointList;
 	}
 
 	public void setPassword(String password) {
@@ -227,7 +224,11 @@ public class User implements UserDetails {
 		this.profileImage = profileImage;
 	}
 
-
-
+	public void addStorePoint(StorePoint storePoint){
+		if(storePointList == null){
+			storePointList = new ArrayList<>();
+		}
+		storePointList.add(storePoint);
+	}
 
 }

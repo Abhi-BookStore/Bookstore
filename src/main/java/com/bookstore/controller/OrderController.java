@@ -1,5 +1,8 @@
 package com.bookstore.controller;
 
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -8,7 +11,11 @@ import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.bookstore.domain.*;
 import com.bookstore.service.*;
+import com.itextpdf.text.Document;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,20 +31,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.bookstore.domain.BillingAddress;
-import com.bookstore.domain.CartItem;
-import com.bookstore.domain.Order;
-import com.bookstore.domain.Payment;
-import com.bookstore.domain.ShippingAddress;
-import com.bookstore.domain.ShoppingCart;
-import com.bookstore.domain.User;
-import com.bookstore.domain.UserPayment;
-import com.bookstore.domain.UserShipping;
 import com.bookstore.s3.service.S3Services;
 import com.bookstore.utility.IndiaConstants;
 import com.bookstore.utility.MailConstructor;
 import com.bookstore.utility.MailSenderUtilityService;
 import com.bookstore.utility.PDFGenerator;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class OrderController {
@@ -107,6 +108,10 @@ public class OrderController {
 			model.addAttribute("emptyCart", true);
 			return "forward:/shoppingCart/cart";
 		}
+
+		// Calculating points to be earned after placing this order.
+		Long toBeEarnedStorePoint = storePointService.getStorePointsByCartItemList(cartItemList);
+		model.addAttribute("toBeEarnedStorePoint", toBeEarnedStorePoint);
 
 		// Checking if cartItem has enough in stock to order get completed.
 		for (CartItem cartItem : cartItemList) {
@@ -215,10 +220,19 @@ public class OrderController {
 		storePointService.addPointsWithOrderDetails(order);
 
 		/** Generating PDF for the order summary */
-		pdfGenerator.generateItenerary(order, uploadFilePath + order.getId() + ".pdf");
+		ByteArrayInputStream bais =  pdfGenerator.generateItenerary(order);
+//		s3Services.uploadObjectWithPublicAccess(order.getId() + ".pdf", document);
 
+		String PdfUploadedUrl = s3Services.uploadStreamObjectToS3WithPublicAccess(order.getId() + ".pdf", bais);
+
+
+//		s3Services.
 		/** Upload the PDFs to S3 Bucket */
-		s3Services.uploadObjectWithPublicAccess(order.getId()+".pdf", uploadFilePath + order.getId()+".pdf");
+//		String orderUrl = s3Services.uploadObjectWithPublicAccess(order.getId()+".pdf", uploadFilePath + order.getId()+".pdf");
+
+		// Setting the uploaded PDF url to the order
+		order.setOrderPDFUrl(PdfUploadedUrl);
+		orderService.save(order);
 
 		/** Sending Async email */
 		mailSenderUtilityService.sendOrderSubmittedEmail(order, user, Locale.ENGLISH);
@@ -237,6 +251,7 @@ public class OrderController {
 		}
 
 		model.addAttribute("estimatedDeliveryDate", estimatedDeliveryDate);
+		model.addAttribute("order", order);
 
 		return "orderSubmittedPage";
 	}
@@ -356,6 +371,31 @@ public class OrderController {
 			return "checkout";
 
 		}
+	}
+
+	@RequestMapping("/downloadPdf")
+	public StreamingResponseBody downloadOrderPdf(@RequestParam("id") Long id, HttpServletResponse response){
+
+		Order order =  orderService.findById(id);
+		String orderPDFUrl = order.getOrderPDFUrl();
+		InputStream is = null;
+		try {
+			URL url = new URL(orderPDFUrl);
+			is = url.openStream();
+			byte[] data = IOUtils.toByteArray(url);
+
+			response.setHeader("Content-disposition", "attachment;filename="+ order.getId()+".pdf");
+
+			return outputStream -> {
+				outputStream.write(data);
+			};
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.err.printf ("Failed while reading bytes. "+ e.getMessage());
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

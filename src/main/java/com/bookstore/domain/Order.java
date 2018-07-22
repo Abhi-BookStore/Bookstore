@@ -46,16 +46,7 @@ public class Order {
 	@ManyToOne
 	private User user;
 
-	@OneToOne
-	private StorePoint storePoint;
-
-	public StorePoint getStorePoint() {
-		return storePoint;
-	}
-
-	public void setStorePoint(StorePoint storePoint) {
-		this.storePoint = storePoint;
-	}
+	private String orderPDFUrl;
 
 	public Long getId() {
 		return id;
@@ -145,7 +136,12 @@ public class Order {
 	public void setPayment(Payment payment) {
 		this.payment = payment;
 	}
-	
-	
 
+	public String getOrderPDFUrl() {
+		return orderPDFUrl;
+	}
+
+	public void setOrderPDFUrl(String orderPDFUrl) {
+		this.orderPDFUrl = orderPDFUrl;
+	}
 }

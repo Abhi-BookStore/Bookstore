@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1000/xhtml">
+<head th:replace="common/header :: common-header" />
+<body>
+<div th:replace="common/header :: navbar" />
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-xs-4">
+            <h3>Username : <span th:text="${user.username}"/></h3>
+        </div>
+    </div>
+
+    <table width="500" border="5px">
+        <thead>
+        <th>Order#</th>
+        <th>Store Point</th>
+        </thead>
+        <tbody>
+        <tr th:each="key: ${map.keySet()}">
+            <td th:text="${key}"></td>
+            <td th:text="${map.get(key).points}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+
+    <h3> Earned Points : <span th:text="${allStorepoints}"/></h3>
+
+
+    <table width="500" border="5px">
+        <thead>
+        <th>Username</th>
+        <th>Store Point</th>
+        </thead>
+        <tbody>
+        <tr th:each="key: ${amap.keySet()}">
+            <td th:text="${key.username}"></td>
+            <td th:each="storePoint : ${amap.get(key)}" th:text="${storePoint.points}"></td>
+
+        </tr>
+        </tbody>
+    </table>
+
+
+
+
+</div>
+
+<!-- Placed at the end of the document so the pages load faster -->
+<div th:replace="common/header :: body-bottom-scripts" />
+
+
+</body>
+</html>
