@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1000/xhtml">
+<head th:replace="common/header :: common-header" />
+<body>
+<div th:replace="common/header :: navbar" />
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">Welcome to Refer A Friend program</div>
+    <br/>
+    <br/>
+    <br/>
+
+        <form class="form-horizontal" action="#" method="post">
+            <div class="form-group">
+                <label for="friendEmail" class="col-sm-2 control-label">Email</label>
+                <div class="col-sm-10">
+                    <input type="email" required="required" class="form-control" id="friendEmail" name="friendEmail" placeholder="Enter friend's email address"/>
+                </div>
+            </div>
+            <div  class="form-inline"  >
+                <div class="form-group" style="margin: 2px;">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-primary">Refer A Friend</button>
+                    </div>
+                </div>
+                <div class="form-group" style="margin: 2px;">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" class="btn btn-danger">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <br/>
+    <br/>
+    <br/>
+    <div class="row">
+        <div class="col-xs-8">
+            <table class="table">
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col">Email ID</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Date</th>
+                    <!--<th scope="col">Date</th>-->
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="list: ${referAFriendList}">
+                    <td><span th:text="${list.emailId}" /></td>
+                    <td><span th:text="${isJoined} ? 'Joined' : 'Not Yet Joined'" /></td>
+                    <td><span th:text="${list.invitationDate}" /></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+</div>
+
+
+<!-- Placed at the end of the document so the pages load faster -->
+<div th:replace="common/header :: body-bottom-scripts" />
+
+
+</body>
+</html>

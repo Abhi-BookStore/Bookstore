@@ -44,17 +44,21 @@
 								<li><a href="#">Store hours &#38; Directions</a></li>
 								<li><a href="#">FAQ</a></li>
 							</ul></li>
+					</ul>
+					<ul class="nav navbar-nav navbar-left">
 						<form class="navbar-form" th:action="@{/search}" method="get">
 							<div class="form-group">
 								<input type="text" name="keyword" class="form-control"
-									placeholder="Book Title" />
+									   placeholder="Book Title" />
+								<button type="submit" class="btn btn-default">Search</button>
+
 							</div>
-							<button type="submit" class="btn btn-default">Search</button>
 						</form>
 					</ul>
+
 					<ul class="nav navbar-nav navbar-right">
 						<li><a th:href="@{/shoppingCart/cart}">SHOPPING CART</a></li>
-						<li><a sec:authorize="isAnonymous()" th:href="@{/login}">MY ACCOUNT</a></li>
+						<li><a sec:authorize="isAnonymous()" th:href="@{/login}">Login/Register</a></li>
 						<!--<li><a sec:authorize="isAuthenticated()" th:href="@{/myProfile}">MY ACCOUNT-->
 
 						<li class="dropdown"><a sec:authorize="isAuthenticated()" href="#" class="dropdown-toggle"
@@ -62,8 +66,8 @@
 												aria-expanded="false">ACCOUNT<span class="caret"></span></a>
 							<ul class="dropdown-menu">
 								<li><a th:href="@{/myProfile}">My Account</a></li>
-								<li><a href="#">Refer a Friend</a></li>
-								<li><a href="#">Coming Soon</a></li>
+								<li><a th:href="@{/myAccount/referAFriend}">Refer a Friend</a></li>
+								<li><a th:href="@{/sp/storePoints}">StorePoint Wallet</a></li>
 							</ul></li>
 
 

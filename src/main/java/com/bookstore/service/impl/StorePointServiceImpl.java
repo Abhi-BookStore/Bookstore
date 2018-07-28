@@ -1,5 +1,6 @@
 package com.bookstore.service.impl;
 
+import com.bookstore.constants.SPEarningMode;
 import com.bookstore.domain.*;
 import com.bookstore.repository.StorePointRepository;
 import com.bookstore.service.StorePointService;
@@ -61,6 +62,7 @@ public class StorePointServiceImpl implements StorePointService {
         storePoint.setReferralBonusPoint(0L);
         order.getUser().addStorePoint(storePoint);
         logger.info("::::: StorePoint :::::: "+ storePoint);
+        storePoint.setPointEarningMode(SPEarningMode.ORDER_PURCHASE.name());
 
 
         if(null != storePoint){
@@ -95,14 +97,15 @@ public class StorePointServiceImpl implements StorePointService {
      * @return
      */
     @Override
-    public Map<Integer, StorePoint> fetchStorePointListByUser(User user) {
+    public Map<Order, StorePoint> fetchStorePointListByUser(User user) {
 
-        Map<Integer, StorePoint> spOrderMap = new HashMap<>();
+        Map<Order, StorePoint> spOrderMap = new HashMap<>();
 
         List<StorePoint> storePointList = storePointRepository.findByUserId(user.getId());
+        storePointList.sort((sp1, sp2)-> sp1.getOrder().getId().compareTo(sp2.getOrder().getId()));
         for(StorePoint storePoint : storePointList){
             logger.info("::::: Saving key as :: "+ Integer.parseInt(storePoint.getOrder().getId().toString()) + " ==> Value ::: "+ storePoint.toString());
-            spOrderMap.put(Integer.parseInt(storePoint.getOrder().getId().toString()), storePoint);
+            spOrderMap.put(storePoint.getOrder(), storePoint);
         }
         return spOrderMap;
     }
@@ -131,8 +134,8 @@ public class StorePointServiceImpl implements StorePointService {
 
         Map<User, List<StorePoint>> userStorePointMap = new HashMap<>();
 
-        List<User> userIdList = storePointRepository.findAllUsers();
-        for(User user : userIdList){
+        List<User> userList = storePointRepository.findAllUsers();
+        for(User user : userList){
             System.out.println("::::::::::::::::::: "+ user.getUsername());
             List<StorePoint> storePointList = storePointRepository.findByUserId(user.getId());
             userStorePointMap.put(user, storePointList);

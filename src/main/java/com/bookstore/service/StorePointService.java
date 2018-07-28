@@ -18,7 +18,7 @@ public interface StorePointService {
      * @param user
      * @return
      */
-    public Map<Integer,StorePoint> fetchStorePointListByUser(User user);
+    public Map<Order,StorePoint> fetchStorePointListByUser(User user);
     public StorePoint findPointByOrder(Order order);
     public Map<User, List<StorePoint>> fetchAllUserStorePoint();
     Long getStorePointsByCartItemList(List<CartItem> cartItemList);

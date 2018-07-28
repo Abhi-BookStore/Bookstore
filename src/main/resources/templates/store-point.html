@@ -7,28 +7,35 @@
 <div class="container">
 
     <div class="row">
-        <div class="col-xs-4">
-            <h3>Username : <span th:text="${user.username}"/></h3>
+        <div class="col-xs-4 panel panel-default">
+            <div class="panel-body">
+                <h3>Username : <span th:text="${user.username}"/></h3>
+            </div>
         </div>
     </div>
 
-    <table width="500" border="5px">
-        <thead>
-        <th>Order#</th>
-        <th>Store Point</th>
+    <table class="table">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col">Order#</th>
+            <th scope="col">Points</th>
+            <th scope="col">Date</th>
+            <!--<th scope="col">Date</th>-->
+        </tr>
         </thead>
         <tbody>
         <tr th:each="key: ${map.keySet()}">
-            <td th:text="${key}"></td>
+            <!--<th scope="row">1</th>-->
+            <td>Order# <span th:text="${key.id}" /></td>
             <td th:text="${map.get(key).points}"></td>
+            <td th:text="${key.orderDate}"></td>
         </tr>
         </tbody>
     </table>
 
-
     <h3> Earned Points : <span th:text="${allStorepoints}"/></h3>
 
-
+    <!--This SHOULD for only admin Page-->
     <table width="500" border="5px">
         <thead>
         <th>Username</th>

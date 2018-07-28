@@ -32,6 +32,7 @@ public class StorePoint {
 	private Double convertedAmount;
 	private boolean referralBonus;
 	private Long referralBonusPoint;
+	private String pointEarningMode;
 
     public StorePoint() {
     }
@@ -90,6 +91,14 @@ public class StorePoint {
 
     public void setOrder(Order order) {
         this.order = order;
+    }
+
+    public String getPointEarningMode() {
+        return pointEarningMode;
+    }
+
+    public void setPointEarningMode(String pointEarningMode) {
+        this.pointEarningMode = pointEarningMode;
     }
 
     /**
