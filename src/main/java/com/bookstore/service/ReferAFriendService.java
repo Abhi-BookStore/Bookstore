@@ -12,6 +12,9 @@ public interface ReferAFriendService {
     List<ReferAFriend> findByJoinedStatus();
     List<ReferAFriend> findByInvitedStatus();
     void revokeReferAFriend(ReferAFriend referAFriend);
-    int fetchTheInvitationCount(String email);
+    int fetchTheInvitationCount(Long userId, String email);
     List<ReferAFriend> findAllReferredFriendsByUserId(Long id) throws Exception;
+    ReferAFriend searchInvitedEmailId(Long id, String friendEmail);
+    boolean checkIfEmailIsRegistered(String email);
+    ReferAFriend findByEmailId(String email);
 }

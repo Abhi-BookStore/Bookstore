@@ -35,6 +35,7 @@
     <br/>
     <br/>
     <br/>
+    <div class="alert alert-danger" th:if="${alreadyRegistered}">Already Registered user.</div>
     <div class="row">
         <div class="col-xs-8">
             <table class="table">
@@ -42,6 +43,7 @@
                 <tr>
                     <th scope="col">Email ID</th>
                     <th scope="col">Status</th>
+                    <th scope="col">Invitation Count</th>
                     <th scope="col">Date</th>
                     <!--<th scope="col">Date</th>-->
                 </tr>
@@ -49,7 +51,8 @@
                 <tbody>
                 <tr th:each="list: ${referAFriendList}">
                     <td><span th:text="${list.emailId}" /></td>
-                    <td><span th:text="${isJoined} ? 'Joined' : 'Not Yet Joined'" /></td>
+                    <td><span th:text="${list.joined} ? 'joined' : 'Not yet joined'" /></td>
+                    <td><span th:text="${list.invitationCount}" /></td>
                     <td><span th:text="${list.invitationDate}" /></td>
                 </tr>
                 </tbody>

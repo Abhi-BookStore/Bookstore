@@ -1,7 +1,9 @@
 package com.bookstore.service.impl;
 
 import com.bookstore.domain.ReferAFriend;
+import com.bookstore.domain.User;
 import com.bookstore.repository.ReferAFriendRepository;
+import com.bookstore.repository.UserRepository;
 import com.bookstore.service.ReferAFriendService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,9 @@ public class ReferAFriendServiceImpl implements ReferAFriendService {
 
     @Autowired
     private ReferAFriendRepository referAFriendRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public void save(ReferAFriend referAFriend) {
@@ -44,10 +49,10 @@ public class ReferAFriendServiceImpl implements ReferAFriendService {
     }
 
     @Override
-    public int fetchTheInvitationCount(String email) {
+    public int fetchTheInvitationCount(Long userId, String email) {
         logger.info(":::: fetchTheInvitationCount for email : "+ email);
 
-        ReferAFriend referAFriend = referAFriendRepository.findInvitationCountByEmail(email);
+        ReferAFriend referAFriend = referAFriendRepository.findInvitationCountByEmail(userId, email);
         logger.info("::::::::::: referAFriend invitation count: "+ referAFriend.getInvitationCount());
         if(null != referAFriend){
             return referAFriend.getInvitationCount();
@@ -64,6 +69,26 @@ public class ReferAFriendServiceImpl implements ReferAFriendService {
         List<ReferAFriend> referAFriendList = referAFriendRepository.findByUserId(userId);
         logger.info(":::: referAFriendList size = "+ referAFriendList.size());
         return referAFriendList;
+    }
+
+    @Override
+    public ReferAFriend searchInvitedEmailId(Long userId, String email) {
+
+        return referAFriendRepository.findInvitationCountByEmail(userId, email);
+    }
+
+    @Override
+    public boolean checkIfEmailIsRegistered(String email) {
+        User foundUser =  userRepository.findByEmail(email);
+        if(null != foundUser && foundUser.isEnabled() && foundUser.getEmail().equalsIgnoreCase(email)){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public ReferAFriend findByEmailId(String emailId) {
+        return referAFriendRepository.findByEmailId(emailId);
     }
 
 

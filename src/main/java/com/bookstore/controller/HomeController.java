@@ -1,19 +1,17 @@
 package com.bookstore.controller;
 
-import java.net.URL;
-import java.security.Principal;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.websocket.server.PathParam;
-
+import com.amazonaws.services.s3.AmazonS3;
+import com.bookstore.domain.*;
+import com.bookstore.domain.security.PasswordResetToken;
+import com.bookstore.domain.security.Role;
+import com.bookstore.domain.security.UserRole;
+import com.bookstore.repository.ReviewRepository;
+import com.bookstore.s3.service.S3Services;
 import com.bookstore.service.*;
+import com.bookstore.service.impl.UserSecurityService;
+import com.bookstore.utility.IndiaConstants;
+import com.bookstore.utility.MailConstructor;
+import com.bookstore.utility.SecurityUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,21 +31,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.bookstore.domain.Book;
-import com.bookstore.domain.Order;
-import com.bookstore.domain.Review;
-import com.bookstore.domain.User;
-import com.bookstore.domain.UserShipping;
-import com.bookstore.domain.security.PasswordResetToken;
-import com.bookstore.domain.security.Role;
-import com.bookstore.domain.security.UserRole;
-import com.bookstore.repository.ReviewRepository;
-import com.bookstore.s3.service.S3Services;
-import com.bookstore.service.impl.UserSecurityService;
-import com.bookstore.utility.IndiaConstants;
-import com.bookstore.utility.MailConstructor;
-import com.bookstore.utility.SecurityUtility;
+import javax.servlet.http.HttpServletRequest;
+import javax.websocket.server.PathParam;
+import java.net.URL;
+import java.security.Principal;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 public class HomeController {
@@ -192,8 +181,7 @@ public class HomeController {
 
 		PasswordResetToken passToken = userService.getPasswordResetToken(token);
 
-		if (passToken == null) {
-			LOG.info("<<<<<<<======================= passToken is null ======================>>>>>>");
+		if (passToken == null || passToken.getExpiryDate().compareTo(new Date()) < 0 ) {
 			String message = "Invalid Token";
 			model.addAttribute("message", message);
 			return "redirect:/badRequest";
@@ -201,6 +189,7 @@ public class HomeController {
 
 		LOG.info("passToken ::::::::::: " + passToken.getToken());
 
+		// Fetched user from the PasswordResetToken
 		User user = passToken.getUser();
 		String username = user.getUsername();
 		String email = user.getEmail();
@@ -268,7 +257,6 @@ public class HomeController {
 		if (null == currentUser) {
 			model.addAttribute("classActiveEdit", true);
 			throw new Exception("User not found.");
-
 		}
 
 		/* check if email already exist */

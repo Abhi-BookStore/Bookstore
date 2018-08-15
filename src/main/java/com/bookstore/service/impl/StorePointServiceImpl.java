@@ -28,6 +28,11 @@ public class StorePointServiceImpl implements StorePointService {
     private UserService userService;
 
 
+    @Override
+    public StorePoint save(StorePoint storePoint) {
+        return storePointRepository.save(storePoint);
+    }
+
     /**
      * Receives @{@link Order} object and calculates points as per cartItem.
      * Sets the values to the SP  table.
@@ -102,10 +107,12 @@ public class StorePointServiceImpl implements StorePointService {
         Map<Order, StorePoint> spOrderMap = new HashMap<>();
 
         List<StorePoint> storePointList = storePointRepository.findByUserId(user.getId());
-        storePointList.sort((sp1, sp2)-> sp1.getOrder().getId().compareTo(sp2.getOrder().getId()));
+//        storePointList.sort((sp1, sp2)-> sp1.getOrder().getId().compareTo(sp2.getOrder().getId()));
         for(StorePoint storePoint : storePointList){
-            logger.info("::::: Saving key as :: "+ Integer.parseInt(storePoint.getOrder().getId().toString()) + " ==> Value ::: "+ storePoint.toString());
-            spOrderMap.put(storePoint.getOrder(), storePoint);
+            if(null != storePoint.getOrder()){
+                logger.info("::::: Saving key as :: "+ Integer.parseInt(storePoint.getOrder().getId().toString()) + " ==> Value ::: "+ storePoint.toString());
+                spOrderMap.put(storePoint.getOrder(), storePoint);
+            }
         }
         return spOrderMap;
     }

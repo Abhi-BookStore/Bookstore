@@ -49,7 +49,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			"/users",
 			"/users/*",
 			"/bookDetail/addReview",
-			"/shoppingCart/notifyInStock"
+			"/shoppingCart/notifyInStock",
+			"/referral-registration"
 	};
 	
 	@Override

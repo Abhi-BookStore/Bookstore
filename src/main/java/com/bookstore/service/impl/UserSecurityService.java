@@ -27,4 +27,14 @@ public class UserSecurityService implements UserDetailsService {
 		return user;
 	}
 
+//	public UserDetails loadUserByEmail(String email){
+//		User user = userRepository.findByEmail(email);
+//
+//		if(null == user){
+//			throw new UsernameNotFoundException("Email not found");
+//		}
+//
+//		return user;
+//	}
+
 }

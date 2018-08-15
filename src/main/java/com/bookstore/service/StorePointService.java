@@ -10,6 +10,7 @@ import java.util.Map;
 
 public interface StorePointService {
 
+    public StorePoint save(StorePoint storePoint);
     public void addPointsWithOrderDetails(Order order);
     public Long findCompleteStorePointByUser(User user);
 

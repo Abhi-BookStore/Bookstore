@@ -16,8 +16,8 @@ public class ReferAFriend {
     private String emailId;
     private Date invitationDate;
     private Date joiningDate;
-    private Boolean isJoined;
-    private int invitationCount;
+    private boolean joined;
+    private int invitationCount=1;
     private String referralModel;
 
     @ManyToOne
@@ -55,14 +55,6 @@ public class ReferAFriend {
         this.joiningDate = joiningDate;
     }
 
-    public Boolean getJoined() {
-        return isJoined;
-    }
-
-    public void setJoined(Boolean joined) {
-        isJoined = joined;
-    }
-
     public int getInvitationCount() {
         return invitationCount;
     }
@@ -85,5 +77,13 @@ public class ReferAFriend {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public boolean isJoined() {
+        return joined;
+    }
+
+    public void setJoined(boolean joined) {
+        this.joined = joined;
     }
 }
