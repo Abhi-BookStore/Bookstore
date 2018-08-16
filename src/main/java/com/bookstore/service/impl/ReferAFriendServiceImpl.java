@@ -80,7 +80,9 @@ public class ReferAFriendServiceImpl implements ReferAFriendService {
     @Override
     public boolean checkIfEmailIsRegistered(String email) {
         User foundUser =  userRepository.findByEmail(email);
-        if(null != foundUser && foundUser.isEnabled() && foundUser.getEmail().equalsIgnoreCase(email)){
+
+        // There Maybe condition If user is not registered but it's email ID is in table if that user is referred by any existing user.
+        if(null != foundUser && foundUser.isEnabled() && foundUser.getEmail().equalsIgnoreCase(email) && null != foundUser.getUsername()){
             return true;
         }
         return false;

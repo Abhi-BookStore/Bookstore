@@ -91,7 +91,7 @@ public class MyAccountController {
         User user = userService.findByUsername(principal.getName());
 
         if(referAFriendService.checkIfEmailIsRegistered(friendEmail)){
-            model.addAttribute("alreadyRegistered", true);
+//            model.addAttribute("alreadyRegistered", true);
             return "redirect:/myAccount/referAFriend";
         }
 
@@ -109,6 +109,7 @@ public class MyAccountController {
             referAFriend=alreadyInvited;
         }else{
             // Create a ReferAFriend Entity and start adding values with this post methods.
+            logger.info("Not already invited");
             referAFriend.setEmailId(friendEmail);
             referAFriend.setInvitationDate(new Date());
             referAFriend.setReferralModel(ReferralMode.EMAIL.name());
@@ -119,7 +120,7 @@ public class MyAccountController {
 
         try {
             // Create temp user, generate token and send email with token ID
-            sendInvitationRegistrationLinkToFriend(user,referAFriend,friendEmail,request);
+            sendInvitationRegistrationLinkToFriend(user,referAFriend,friendEmail,request, alreadyInvited);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -130,23 +131,36 @@ public class MyAccountController {
     }
 
 
-    private void sendInvitationRegistrationLinkToFriend(User accountUser, ReferAFriend referAFriend, String friendEmail, HttpServletRequest request) throws Exception {
+    private void sendInvitationRegistrationLinkToFriend(User accountUser, ReferAFriend referAFriend, String friendEmail, HttpServletRequest request, ReferAFriend alreadyInvited) throws Exception {
+        User newUser = null;
+        String password ="";
 
-        User newUser = new User();
-        newUser.setEmail(friendEmail);
+        if(alreadyInvited == null){
 
-        String password = SecurityUtility.randomPassword();
-        String encryptedPassword = SecurityUtility.passwordEncoder().encode(password);
-        newUser.setPassword(encryptedPassword);
+            newUser = new User();
+            newUser.setEmail(friendEmail);
 
-        Role role = new Role();
-        role.setRoleId(1);
-        role.setName("ROLE_USER");
+            password = SecurityUtility.randomPassword();
+            String encryptedPassword = SecurityUtility.passwordEncoder().encode(password);
+            newUser.setPassword(encryptedPassword);
 
-        Set<UserRole> userRoles = new HashSet<>();
-        userRoles.add(new UserRole(newUser, role));
+            Role role = new Role();
+            role.setRoleId(1);
+            role.setName("ROLE_USER");
 
-        userService.createUser(newUser, userRoles);
+            Set<UserRole> userRoles = new HashSet<>();
+            userRoles.add(new UserRole(newUser, role));
+
+            userService.createUser(newUser, userRoles);
+        }else{
+//            newUser = alreadyInvited.getUser();
+            newUser = userService.findByEmail(alreadyInvited.getEmailId());
+            logger.info("ALreday invited new user::: "+ newUser.getEmail());
+            password = SecurityUtility.randomPassword();
+            String encryptedPassword = SecurityUtility.passwordEncoder().encode(password);
+            newUser.setPassword(encryptedPassword);
+            userService.save(newUser);
+        }
         logger.info("New user has been created: email:: " + friendEmail);
 
         String token = UUID.randomUUID().toString();
@@ -170,7 +184,7 @@ public class MyAccountController {
 
         // Now send the email to friend with joining Link from User's registered email ID.
         Map<String, Object> contextRAF = new HashMap<String, Object>();
-        contextRAF.put("user", newUser);
+        contextRAF.put("user", accountUser);
         contextRAF.put("referAFriend", referAFriend);
         contextRAF.put("invitationURL", referralLink);
         contextRAF.put("token", token);
@@ -187,13 +201,18 @@ public class MyAccountController {
                                            @RequestParam("tempwd") String tempwd
                                            ){
 
-        System.out.println("TOKEN:::::: "+ token);
-        System.out.println("userId:::::: "+ userId);
-        System.out.println("tempwd:::::: "+ tempwd);
+        logger.info("TOKEN:::::: "+ token);
+        logger.info("userId:::::: "+ userId);
+        logger.info("tempwd:::::: "+ tempwd);
+
+        PasswordResetToken passToken = userService.getPasswordResetToken(token);
+        String userEmail = passToken.getUser().getEmail();
+        logger.info("Email Fetched from token------------   "+ userEmail + " user: "+ passToken.getUser().getId());
 
         model.addAttribute("token", token);
         model.addAttribute("userId", userId);
         model.addAttribute("tempwd", tempwd);
+        model.addAttribute("userEmail", userEmail);
 
         return "RAFRegistration";
     }

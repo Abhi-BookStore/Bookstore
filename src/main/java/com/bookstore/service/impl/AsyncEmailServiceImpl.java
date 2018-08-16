@@ -5,6 +5,7 @@ import com.bookstore.service.EmailTemplateService;
 import com.sendgrid.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +13,10 @@ import java.io.IOException;
 import java.util.Map;
 
 @Service
+@PropertySource(value="classpath:application.properties")
 public class AsyncEmailServiceImpl implements AsyncEmailService {
 
-//    @Value("${sendgrid_api_key}")
-    @Value("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")
+    @Value("#{'${sendgrid_api_key}'}")
     private String sendgridApiKey;
 
     @Autowired
@@ -53,6 +54,7 @@ public class AsyncEmailServiceImpl implements AsyncEmailService {
         request.setBody(mail.build());
 
         Response  response = sendGrid.api(request);
+        System.out.println("API KEY :::: "+ sendgridApiKey);
         System.out.println("::::::::::: SendGrid email response code ::: " + response.getStatusCode());
     }
 
